@@ -7,7 +7,6 @@ class linha_separadora(QFrame):
         self.setFrameShape(QFrame.Shape.HLine)
         self.setFrameShadow(QFrame.Shadow.Sunken)
 
-
 class menu_etapas(QHBoxLayout):
     def __init__(self, etapas_nomes, ir_para_etapa_callback):
         super().__init__()
@@ -31,13 +30,11 @@ class menu_etapas(QHBoxLayout):
             if i == current_step:
                 label.setStyleSheet('background: #d0eaff; border-radius: 6px; font-weight: bold; color: #005080; font-size: 16px; padding: 4px 8px;')
             else:
-                label.setStyleSheet('color: #888; font-size: 14px; padding: 4px 8px; cursor: pointer;')
-
+                label.setStyleSheet('color: #888; font-size: 14px; padding: 4px 8px;')
 
 class scroll_area(QScrollArea):
     def __init__(self):
         super().__init__()
-
         self.scroll_widget = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
         self.setWidget(self.scroll_widget)
@@ -49,4 +46,3 @@ class scroll_area(QScrollArea):
     def remover_item(self, vao_widget):
         self.scroll_layout.removeWidget(vao_widget)
         vao_widget.setParent(None)
-        

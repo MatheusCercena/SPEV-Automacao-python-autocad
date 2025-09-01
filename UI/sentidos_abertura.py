@@ -1,14 +1,18 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QListWidget, QMessageBox, QHBoxLayout, QComboBox, QDialog
-from PyQt6.QtGui import QIntValidator
+from PyQt6.QtCore import QRegularExpression
+from PyQt6.QtGui import QRegularExpressionValidator
+
+
+regex = QRegularExpression(r"^(?:[1-9]|[1-9][0-9])$")
+validador = QRegularExpressionValidator(regex)
 
 class SentidosAberturaWidget(QWidget):
-    def __init__(self):
+    def __init__(self, parent_vaos):
         super().__init__()
         self.vidros_moveis = []
-        self.quant_vidros = 0
+        self.parent_vaos = parent_vaos
         self.setObjectName('sentidosAberturaElementos')
-        self.quant_vidros = self.quant_vidros
-        print(self.quant_vidros)
+        self.quant_vidros = self.definir_quant_vidros()
         self.setLayout(QVBoxLayout())
         self.layout().addWidget(QLabel('SENTIDOS DE ABERTURA'))
 
@@ -16,15 +20,14 @@ class SentidosAberturaWidget(QWidget):
         self.layout().addWidget(self.lbl_ini)
         self.input_ini = QLineEdit()
         self.input_ini.setPlaceholderText('Vidro início')
-        self.input_ini.setValidator(QIntValidator(1, self.quant_vidros))
+        self.input_ini.setValidator(validador)
         self.layout().addWidget(self.input_ini)
 
         self.lbl_fim = QLabel('Vidro fim')
         self.layout().addWidget(self.lbl_fim)
         self.input_fim = QLineEdit()
         self.input_fim.setPlaceholderText('Vidro fim')
-        começo = int(self.input_ini.text()) if self.input_ini.text() != '' else 0
-        self.input_fim.setValidator(QIntValidator(começo, self.quant_vidros))
+        self.input_fim.setValidator(validador)
         self.layout().addWidget(self.input_fim)
 
         self.lbl_sentido = QLabel('Sentido')
@@ -51,9 +54,14 @@ class SentidosAberturaWidget(QWidget):
         self.sentidos_visualizacao = []
         self.update_list()
 
+    def definir_quant_vidros(self):
+        if self.parent_vaos.vaos_widget.vaos and len(self.parent_vaos.vaos_widget.vaos) > 1:
+            self.quant_vidros = sum(self.parent_vaos.vaos_widget.dados_sacada['quantidade_vidros'])
+        else:
+            self.quant_vidros = 0
+
     def atualizar_quant_vidros(self, pai):
         self.quant_vidros = sum(pai.dados_sacada['quantidade_vidros']) if len(pai.dados_sacada) > 0 else [0]
-        print(self.quant_vidros)
 
     def add_sentido(self):
         try:
@@ -115,11 +123,14 @@ class SentidosAberturaWidget(QWidget):
         if self.v_ini > self.quant_vidros:
             self.dialogo(f'A sacada tem menos que {self.v_ini} vidros. Escolha um vidro existente na sacada.')
             return False
-        elif self.v_ini in self.vidros_moveis or self.v_ini < 1:
-            self.dialogo(f'O vidro {self.v_ini} vidro já abre em outro lugar ou é menor que 1.')
+        elif self.v_ini < 1:
+            self.dialogo(f'O vidro inicial é menor que 1.')
+            return False
+        elif self.v_ini in self.vidros_moveis:
+            self.dialogo(f'O vidro {self.v_ini} já abre em outro lugar.')
             return False
         elif self.v_ini > self.v_fim:
-            self.dialogo('O vidro inicial da abertura precisa ser menor ou igua o final.')
+            self.dialogo('O vidro inicial da abertura precisa ser menor ou igual ao final.')
             return False
         return True
 

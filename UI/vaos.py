@@ -33,6 +33,9 @@ class VaosWidget(QWidget):
         vao_widget = VaoWidget(numeracao_vao, self)
         self.vaos.append(vao_widget)
         self.scroll_area.adicionar_item(vao_widget)
+        for i, vao in enumerate(self.vaos):
+            if i < len(self.vaos) - 1:
+                vao.juncoes_layout.juncao_dir.setEnabled(True)
 
     def remover_vao(self, numeracao_vao):
         for i, vao in enumerate(self.vaos):
@@ -41,7 +44,6 @@ class VaosWidget(QWidget):
                 self.vaos.pop(i)
                 self.renomear_vaos()
                 break
-        self.vaos[0].angulos_layout.input_ang_es.setReadOnly(False)
 
     def renomear_vaos(self):
         for i, vao_restante in enumerate(self.vaos):
@@ -111,11 +113,35 @@ class VaosWidget(QWidget):
 
             return angs_paredes, angs_in
 
+        def get_juncoes():
+            juncoes = []
+            for vao in self.vaos:
+                dados_vao = vao.get_dados_vao()
+                juncoes.append(dados_vao['juncoes'])
+            return juncoes
+
+        def get_prumos():
+            prumos = []
+            for i, vao in enumerate(self.vaos):
+                if i == 0 or i == len(self.vaos) -1:
+                    dados_vao = vao.get_dados_vao()
+                    if len(self.vaos) == 1:
+                        prumos.append(dados_vao['prumos'][0])
+                        prumos.append(dados_vao['prumos'][1])
+                    elif i == 0:
+                        prumos.append(dados_vao['prumos'][0])
+                    else:
+                        prumos.append(dados_vao['prumos'][1])
+
+            return prumos
+
         linhas_centro = get_linhas_centro()
         alturas = get_alturas()
         niveis = get_niveis()
         quant_vidros = get_quantidade_vidros()
         angulos_paredes, angulos_internos = get_angulos()
+        juncoes = get_juncoes()
+        prumos = get_prumos()
 
         dados = {
             'linhas_centro': linhas_centro,
@@ -124,6 +150,8 @@ class VaosWidget(QWidget):
             'quantidade_vidros': quant_vidros,
             'angulos_paredes': angulos_paredes,
             'angulos_internos': angulos_internos,
+            'juncoes': juncoes,
+            'prumos': prumos,
             'aberturas': ''
         }
         for dado in dados.values():

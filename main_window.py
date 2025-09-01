@@ -15,7 +15,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle('SPEV - SISTEMA PARA PROJETOS DE ENVIDRAÇAMENTO VERSATEEL')
         self.setGeometry(100, 100, 900, 700)
-        self.showMaximized()  # Abrir em tela cheia
+        self.showMaximized()
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
 
     def iniciar_etapas(self):
         self.vaos_widget = VaosWidget()
-        self.sentidos_widget = SentidosAberturaWidget()
+        self.sentidos_widget = SentidosAberturaWidget(self)
         self.resumo_widget = ResumoWidget()
 
         self.etapas = [self.vaos_widget, self.sentidos_widget, self.resumo_widget]
