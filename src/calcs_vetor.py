@@ -6,8 +6,8 @@ Inclui operações com vetores e manipulação de coordenadas para uso em outros
 from math import sqrt, atan2
 
 def contar_entre_numeros(a: int, b: int) -> int:
-    '''Conta quantos números existem entre dois valores inteiros, excluindo os próprios valores.'''
-    return max(0, abs(b - a) - 1)
+    '''Conta quantos números existem entre dois valores inteiros.'''
+    return max(0, abs(b - a) + 1)
 
 def maior_valor(lista):
     '''Retorna o maior valor de uma lista de listas.'''

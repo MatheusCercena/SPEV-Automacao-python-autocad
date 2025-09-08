@@ -10,15 +10,13 @@ Desenha os leitos, através de offsets chamados via COM e fillets por lisp.
 import pythoncom
 from pyautocad import Autocad, APoint
 from src.autocad_conn import get_acad
-from src.calcs_vetor import normalizar, definir_pontos_na_secao
-from src.calcs_cad import calcular_gaps_leito
+from src.calcs_vetor import normalizar, definir_pontos_na_secao, distancia_2d
+from src.calcs_cad import calcular_gaps_leito, obter_pontos_medida_total
 from math import radians
 from sympy import symbols, Eq, solve
 from time import sleep
 from src.logs import log_spev
 
-acad2 = Autocad(create_if_not_exists=True)
-acad, acad_ModelSpace = get_acad()
 
 x, y, b = symbols('x y b')
 
@@ -34,6 +32,9 @@ def desenhar_guias_leitos(handles_lcs: list, vidros_sacada: list, posicao_dos_vi
     Returns:
         list: Lista com handles das guias dos leitos.
     """
+    acad, acad_ModelSpace = get_acad()
+    acad2 = Autocad(create_if_not_exists=True)
+
     handles_guias_leitos = []
     for i, linha_de_centro in enumerate(handles_lcs):
 
@@ -170,9 +171,13 @@ def desenhar_leitos(handles_guias: list, vidros: list, angs: list[float], girato
             - Dicionário com handles dos leitos organizados por tipo
             - Lista com coordenadas dos leitos
     """
+    acad2 = Autocad(create_if_not_exists=True)
+    acad, acad_ModelSpace = get_acad()
+
     handles_leitos = {'externos': [], 'internos': [], 'lat_esq': [], 'lat_dir': []}
     coordenadas_leitos = []
     handles_guias = converter_ordem_para_secoes(vidros, handles_guias)
+    medidas_leitos = []
 
     pos_vidro = 1
     pos_sentido = 0
@@ -294,4 +299,7 @@ def desenhar_leitos(handles_guias: list, vidros: list, angs: list[float], girato
                     sleep(0.5)
                     log_spev(f'Tentativa {tentativa+1} de 5 falhou ao tentar dar fillet nos leitos com erro: {e}')
             pos_vidro += 1
-    return handles_leitos, coordenadas_leitos
+            _, p1, p2 = obter_pontos_medida_total([ext_ini, ext_fim, int_ini, int_fim])
+            distancia = distancia_2d(p1, p2)
+            medidas_leitos.append(distancia)
+    return handles_leitos, coordenadas_leitos, medidas_leitos

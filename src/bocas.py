@@ -5,8 +5,6 @@ from pyautocad import Autocad, APoint
 from src.comandos_cad import adicionar_texto_modelspace
 from src.logs import log_spev
 
-acad = Autocad(create_if_not_exists=True)
-
 def verificar_se_boca_bate_na_mola(molas, boca, sentido):
     ''' Verifica se a boca está batendo em alguma mola. '''
     for mola in molas:
@@ -148,6 +146,8 @@ def desenhar_bocas(
         sentidos_abert: list[int, int, int, int, tuple[int]]
         ):
     ''' Desenha as bocas com base nas medidas e quantidade de vidros por boca. '''
+    acad = Autocad(create_if_not_exists=True)
+
     try:
         for i, abertura in enumerate(sentidos_abert):
             medidas_bocas_lado = medidas_bocas[i]
@@ -209,6 +209,7 @@ def desenhar_bocas(
         log_spev(f"Erro ao adicionar texto de ângulo: {e}")
 
 def desenhar_pivos_individuais(pivos_individuais, pos_lcs, quant_vidros, sentidos_abert):
+    acad = Autocad(create_if_not_exists=True)
     try:
         for i, abertura in enumerate(sentidos_abert):
             pivos_individuais_lado = pivos_individuais[i]

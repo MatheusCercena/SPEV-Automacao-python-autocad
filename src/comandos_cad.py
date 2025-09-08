@@ -8,10 +8,6 @@ from time import sleep
 from src.autocad_conn import get_acad
 from pyautocad import Autocad, APoint
 
-acad, acad_ModelSpace = get_acad()
-autocad = Autocad()
-layout_space = autocad.doc.PaperSpace
-model_space = autocad.doc.ModelSpace
 
 
 def carregar_comandos() -> None:
@@ -32,6 +28,8 @@ def carregar_comandos() -> None:
     (princ)
 )
 '''
+    acad, acad_ModelSpace = get_acad()
+
     #__file__ retorna a pasta atual, lisp é a pasta a ser criada, os.path.join junta os 2 caminhos
     dir_base = os.path.join(os.path.dirname(__file__), 'lisp')
     os.makedirs(dir_base, exist_ok=True)
@@ -49,6 +47,8 @@ def remover_guias() -> None:
     Returns:
         None: Função remove elementos do AutoCAD sem retorno.
     """
+    acad, acad_ModelSpace = get_acad()
+
     for i in range(acad_ModelSpace.Count - 1, -1, -1):  # reverso
         try:
             entidade = acad_ModelSpace.Item(i)
@@ -58,14 +58,29 @@ def remover_guias() -> None:
             print(f"Erro ao deletar entidade {i}: {e}")
 
 def adicionar_texto_layout(texto, posicao: tuple[float, float, float], altura: float) -> None:
+    acad, acad_ModelSpace = get_acad()
+    autocad = Autocad()
+    layout_space = autocad.doc.PaperSpace
+    model_space = autocad.doc.ModelSpace
+
     texto = layout_space.AddText(texto, posicao, altura)
     return texto
 
 def adicionar_texto_modelspace(texto, posicao: tuple[float, float, float], altura: float) -> None:
+    acad, acad_ModelSpace = get_acad()
+    autocad = Autocad()
+    layout_space = autocad.doc.PaperSpace
+    model_space = autocad.doc.ModelSpace
+
     texto = model_space.AddText(texto, posicao, altura)
     return texto
 
 def adicionar_mtext_modelspace(texto, posicao: tuple[float, float, float], altura: float, largura: float) -> None:
+    acad, acad_ModelSpace = get_acad()
+    autocad = Autocad()
+    layout_space = autocad.doc.PaperSpace
+    model_space = autocad.doc.ModelSpace
+
     texto = model_space.AddMText(posicao, largura, texto)
     texto.Height = altura
     return texto

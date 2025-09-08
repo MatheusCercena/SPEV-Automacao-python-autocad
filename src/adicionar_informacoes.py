@@ -3,7 +3,6 @@ from src.comandos_cad import adicionar_mtext_modelspace, adicionar_texto_modelsp
 from pyautocad import APoint, Autocad
 from src.logs import log_spev
 
-acad = Autocad(create_if_not_exists=True)
 
 def posicionar_pivos(pos_lcs, sec_princ, pivos: list[int], giratorios: list[int]):
     """

@@ -16,21 +16,20 @@ from copy import deepcopy
 from math import floor
 from time import sleep
 
-acad, acad_ModelSpace = get_acad()
-acad2 = Autocad(create_if_not_exists=True)
-
 def desenhar_guias_vidros(handles_lcs: list, vidros_sacada: list, posicao_dos_vidros: list) -> None:
     """Desenha as guias dos vidros no AutoCAD.
-    
+
     Args:
         handles_lcs: Lista de handles das linhas de centro.
         vidros_sacada: Lista com os vidros da sacada.
         posicao_dos_vidros: Lista com as posições dos vidros.
-    
+
     Returns:
         None: Função desenha elementos no AutoCAD sem retorno.
     """
-    for i, linha_de_centro in enumerate(handles_lcs):  
+    acad2 = Autocad(create_if_not_exists=True)
+
+    for i, linha_de_centro in enumerate(handles_lcs):
         for _ in range(5):
             try:
                 pythoncom.PumpWaitingMessages()
@@ -51,17 +50,17 @@ def desenhar_guias_vidros(handles_lcs: list, vidros_sacada: list, posicao_dos_vi
 
 def definir_folgas_vidros(juncoes: list, gaps_lcs: list, angs_in: list, espessura_vidro: int) -> list[list[int, int]]:
     """Define as folgas dos vidros para cada seção da sacada.
-    
+
     Args:
         juncoes: Lista com tipos de junção por seção.
         gaps_lcs: Lista com gaps das linhas de centro.
         angs_in: Lista com ângulos internos.
         espessura_vidro: Espessura do vidro em milímetros.
-    
+
     Returns:
         list: Lista com as folgas de cada seção da sacada, onde cada elemento é uma lista com 4 elementos:
             - Folga parede esquerdo
-            - Folga parede direito  
+            - Folga parede direito
             - Folga ajuste de ângulo esquerdo
             - Folga ajuste de ângulo direito
     """
@@ -84,12 +83,12 @@ def definir_folgas_vidros(juncoes: list, gaps_lcs: list, angs_in: list, espessur
                 folgas_secao.append(folga_vidro_vidro)
         for lado in range(0, 2):
             if secao[lado] == 0 and lado == 0: #parede esq
-                folgas_secao.append(gaps_lcs[0]) 
+                folgas_secao.append(gaps_lcs[0])
             elif secao[lado] == 0 and lado == 1: #parede dir
-                folgas_secao.append(gaps_lcs[1]) 
-            elif secao[lado] == 1 or secao[lado] == 2: 
+                folgas_secao.append(gaps_lcs[1])
+            elif secao[lado] == 1 or secao[lado] == 2:
                 folgas_secao.append(0)
-            elif secao[lado] == 3 and lado == 0: 
+            elif secao[lado] == 3 and lado == 0:
                 folgas_secao.append(calcular_gaps_vidro(angs_in[index-1], espessura_vidro))
             elif secao[lado] == 3 and lado == 1:
                 folgas_secao.append(calcular_gaps_vidro(angs_in[index], espessura_vidro))
@@ -98,12 +97,12 @@ def definir_folgas_vidros(juncoes: list, gaps_lcs: list, angs_in: list, espessur
 
 def medida_dos_vidros(lcs: list, quant_vidros: list, folgas: list) -> list[int]:
     """Calcula as medidas dos vidros individuais.
-    
+
     Args:
         lcs: Lista com as linhas de centro.
         quant_vidros: Lista com quantidade de vidros por seção.
         folgas: Lista com as folgas dos vidros.
-    
+
     Returns:
         list: Lista com as medidas dos vidros por seção.
     """
@@ -117,7 +116,7 @@ def medida_dos_vidros(lcs: list, quant_vidros: list, folgas: list) -> list[int]:
         folga_ajuste_angulo_dir = folgas[i][3]
         vidros_secao = []
 
-        medida_com_vidro = linha_de_centro + folga_esq + folga_dir - folga_ajuste_angulo_esq - folga_ajuste_angulo_dir 
+        medida_com_vidro = linha_de_centro + folga_esq + folga_dir - folga_ajuste_angulo_esq - folga_ajuste_angulo_dir
         medida_com_vidro -= folga_vep*(quant_vidros[i]-1)
         vidros_individuais = floor(medida_com_vidro/quant_vidros[i])
         if quant_vidros[i] > 1:
@@ -133,11 +132,11 @@ def medida_dos_vidros(lcs: list, quant_vidros: list, folgas: list) -> list[int]:
 
 def pontos_dos_vidros(medidas_vidros: list[int], folgas: list[list[int, int]]) -> list[list[float, float]]:
     """Calcula os pontos de posicionamento dos vidros tendo como referencia o inicio da linha de centro.
-    
+
     Args:
         vidros: Lista com os vidros por seção.
         folgas: Lista com as folgas dos vidros.
-    
+
     Returns:
         list: Lista com os pontos de posicionamento dos vidros.
     """
@@ -153,7 +152,7 @@ def pontos_dos_vidros(medidas_vidros: list[int], folgas: list[list[int, int]]) -
             if index > 0:
                 pos_inicial = pos_acumulada
             pos_final = pos_inicial + vidro
-            pos_acumulada = pos_final + folga_vep                
+            pos_acumulada = pos_final + folga_vep
             pontos.append(pos_inicial)
             pontos.append(pos_final)
             pontos_linha_de_centro.append(pontos)
@@ -162,15 +161,18 @@ def pontos_dos_vidros(medidas_vidros: list[int], folgas: list[list[int, int]]) -
 
 def offset_vidros(espessura_vidro: int) -> tuple[list[str], list[tuple[float, float, float]]]:
     """Cria offsets dos vidros externos e internos.
-    
+
     Args:
         espessura_vidro: Espessura do vidro em milímetros.
-    
+
     Returns:
         tuple: Tupla contendo:
             - Lista de handles dos vidros
             - Lista com coordenadas dos vidros
     """
+    acad, acad_ModelSpace = get_acad()
+    acad2 = Autocad(create_if_not_exists=True)
+
     handles_vidros = []
     coord_vidros = []
     for linha in acad_ModelSpace:

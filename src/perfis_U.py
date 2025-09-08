@@ -10,7 +10,6 @@ import pythoncom
 from time import sleep
 from src.logs import log_spev
 
-acad, acad_ModelSpace = get_acad()
 
 def offset_perfis_U(handles_lcs: list) -> dict[str, list[str]]:
     """Cria offsets dos perfis U externos e internos.
@@ -23,6 +22,7 @@ def offset_perfis_U(handles_lcs: list) -> dict[str, list[str]]:
             - 'externos': Lista de handles dos perfis U externos
             - 'internos': Lista de handles dos perfis U internos
     """
+
     offset_ext = 20
     offset_int = 32
 
@@ -53,6 +53,8 @@ def fillet_perfis_U(handles: dict[str, list[str]]) -> None:
     Returns:
         None: Função executa comandos no AutoCAD sem retorno.
     """
+    acad, acad_ModelSpace = get_acad()
+
     linhas_externas = deepcopy(handles['externos'])
     linhas_internas = deepcopy(handles['internos'])
 
@@ -76,6 +78,8 @@ def definir_coord_perfis_U(handles: dict[str, list[str]]) -> list[list[tuple[flo
     Returns:
         list: Lista de sublistas que contém 4 tuplas com os pontos x, y, z de cada extremidade do perfil U.
     """
+    acad, acad_ModelSpace = get_acad()
+
     linhas_externas = deepcopy(handles['externos'])
     linhas_internas = deepcopy(handles['internos'])
     coordenadas = []
@@ -112,6 +116,7 @@ def distribuir_perfis_U_por_lado(medidas: list[list[tuple[float, float, float]]]
         Entrada: [3, 5, 2]
         Saída: [[1, 2, 3], [4, 5, 6, 7, 8], [9, 10]]
     """
+
     quant_secoes = []
     for lado in medidas:
         quant_secoes.append(len(lado))

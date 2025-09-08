@@ -7,6 +7,9 @@ from UI.elementos_main import linha_separadora, menu_etapas
 from UI.vaos import VaosWidget
 from UI.sentidos_abertura import SentidosAberturaWidget
 from UI.resumo import ResumoWidget
+from src.main import projetar
+
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -21,9 +24,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.layout_ = QVBoxLayout(self.central_widget)
 
-        etapas_nomes = ['Vãos', 'Sentidos de Abertura', 'Resumo']
-
-        self.menu_etapas = menu_etapas(etapas_nomes, self.ir_para_etapa)
+        self.menu_etapas = menu_etapas(self.ir_para_etapa)
         self.separador = linha_separadora()
         self.stack = QStackedWidget()
 
@@ -77,6 +78,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    projetar({}, 'TESTE')
     app.setStyleSheet(Path("UI/styles.qss").read_text(encoding="utf-8"))
     window = MainWindow()
     window.show()

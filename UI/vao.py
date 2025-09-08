@@ -3,10 +3,10 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator
 from PyQt6.QtCore import Qt, QRegularExpression
 
-from UI.vao_frame_widgets import HeaderLayout, LinhaCentroLayout, QuantidadeVidrosLayout, AngulosLayout, VaoFrame, Layout_Frame, JuncoesLayout, BotaoAdicionarAlturas, PrumosLayout
+from UI.vao_frame_widgets import HeaderLayout, LinhaCentroLayout, QuantidadeVidrosLayout, AngulosLayout, VaoFrame, Layout_Frame, JuncoesLayout, BotaoAdicionarAlturas
 from UI.elementos_main import linha_separadora
 
-regex = QRegularExpression(r"^(?:\d{1,2}(?:\.\d)?|1[0-7]\d(?:\.\d)?|179(?:\.[0-9])?)$")
+regex = QRegularExpression(r"^-?(?:\d{1,2}(?:\.\d)?|1[0-7]\d(?:\.\d)?|179(?:\.[0-9])?)$")
 validator = QRegularExpressionValidator(regex)
 
 ALTURA_FIXA = 40
@@ -35,32 +35,6 @@ class VaoWidget(QWidget):
         self.quant_vidos_layout = QuantidadeVidrosLayout()
         self.angulos_layout = AngulosLayout(self)
         self.juncoes_layout = JuncoesLayout(self, self.parent_widget, self.numeracao_vao)
-        self.prumos_layout = PrumosLayout()
-
-        if self.numeracao_vao == 1 and len(self.parent_widget.vaos) == 0:
-            self.prumos_layout.adicionar_completo()
-
-        if self.numeracao_vao == 1 and len(self.parent_widget.vaos) > 0:
-            self.prumos_layout.adicionar_a_esquerda()
-
-        if self.numeracao_vao == len(self.parent_widget.vaos)+1:
-            self.prumos_layout.adicionar_a_direita()
-
-        for i, vao in enumerate(self.parent_widget.vaos):
-            if i == 0 and len(self.parent_widget.vaos) > 0:
-                while vao.prumos_layout.count():
-                    item = vao.prumos_layout.takeAt(0)
-                    widget = item.widget()
-                    if widget is not None:
-                        widget.setParent(None)
-                vao.prumos_layout.adicionar_a_esquerda()
-            if i > 0 and i < len(self.parent_widget.vaos):
-                vao.vao_layout.removeItem(vao.prumos_layout)
-                while vao.prumos_layout.count():
-                    item = vao.prumos_layout.takeAt(0)
-                    widget = item.widget()
-                    if widget is not None:
-                        widget.setParent(None)
 
         if self.numeracao_vao > 1:
             angulo_direito_anterior = self.parent_widget.vaos[self.numeracao_vao-2].angulos_layout.input_ang_dir.text()
@@ -80,7 +54,6 @@ class VaoWidget(QWidget):
         self.vao_layout.addLayout(self.juncoes_layout)
         self.vao_layout.addWidget(self.botao_add_altura)
         self.vao_layout.addLayout(self.alturas_container)
-        self.vao_layout.addLayout(self.prumos_layout)
 
         self.frame.setLayout(self.vao_layout)
 
@@ -94,44 +67,6 @@ class VaoWidget(QWidget):
 
     def remover_vao(self):
         self.parent_widget.remover_vao(self.numeracao_vao-1)
-
-        # for i, vao in enumerate(self.parent_widget.vaos):
-        #     if i == 0 and len(self.parent_widget.vaos) == 0:
-        #         print("1")
-        #         while vao.prumos_layout.count():
-        #             item = vao.prumos_layout.takeAt(0)
-        #             widget = item.widget()
-        #             if widget is not None:
-        #                 widget.setParent(None)
-        #         self.prumos_layout.adicionar_completo()
-
-        #     if i == 0 and len(self.parent_widget.vaos) > 0:
-        #         print("2")
-        #         while vao.prumos_layout.count():
-        #             item = vao.prumos_layout.takeAt(0)
-        #             widget = item.widget()
-        #             if widget is not None:
-        #                 widget.setParent(None)
-        #         self.prumos_layout.adicionar_a_esquerda()
-
-        #     if self.numeracao_vao == len(self.parent_widget.vaos)+1:
-        #         print("3")
-        #         while vao.prumos_layout.count():
-        #             item = vao.prumos_layout.takeAt(0)
-        #             widget = item.widget()
-        #             if widget is not None:
-        #                 widget.setParent(None)
-        #         self.prumos_layout.adicionar_a_direita()
-
-        #     if i > 0 and i < len(self.parent_widget.vaos):
-        #         print("4")
-        #         vao.vao_layout.removeItem(vao.prumos_layout)
-        #         while vao.prumos_layout.count():
-        #             item = vao.prumos_layout.takeAt(0)
-        #             widget = item.widget()
-        #             if widget is not None:
-        #                 widget.setParent(None)
-
 
     def adicionar_altura(self):
         altura_idx = len(self.alturas)
@@ -156,7 +91,7 @@ class VaoWidget(QWidget):
         input_nivel.setPlaceholderText('Digite o nível')
         input_nivel.setFixedWidth(LARGURA_FIXA*2)
         input_nivel.setFixedHeight(ALTURA_FIXA)
-        input_nivel.setValidator(QIntValidator(0, 4000))
+        input_nivel.setValidator(QIntValidator(-4000, 4000))
 
         btn_remove = QPushButton('×')
         btn_remove.setFixedHeight(ALTURA_FIXA)
@@ -232,6 +167,15 @@ class VaoWidget(QWidget):
         """
         campos_vazios = []
 
+        if not self.parent_widget.ordem_servico.input.text():
+            campos_vazios.append(f"Ordem de Serviço.")
+        else:
+            regex = QRegularExpression(r"^\d{1,4}/\d{2}-\d{1,2}$")
+            validador = QRegularExpressionValidator(regex)
+            if not validador.validate(self.parent_widget.ordem_servico.input.text(), 0)[0] == QRegularExpressionValidator.State.Acceptable:
+                campos_vazios.append(f"Ordem de Serviço com formato inválido (xxxx/xx-x).")
+
+
         if not self.linhas_centro_layout.input_lc.text():
             campos_vazios.append(f"Linha de Centro vão {self.numeracao_vao}")
 
@@ -255,8 +199,14 @@ class VaoWidget(QWidget):
         if not self.angulos_layout.input_ang_esq.text():
             campos_vazios.append(f"Ângulo Esquerdo vão {self.numeracao_vao}")
 
-        if self.prumos_layout and not self.prumos_layout.input_prumos.text():
-            campos_vazios.append(f"Prumo {'parede esquerda.' if self.numeracao_vao == 1 else 'parede direita.'} vão {self.numeracao_vao}")
+        if not self.parent_widget.prumos_elevador.input_prumos.text():
+            campos_vazios.append(f"Prumo parede esquerda.")
+
+        if not self.parent_widget.prumos_elevador.input_elevador.text():
+            campos_vazios.append(f"Altura elevador.")
+
+        if not self.parent_widget.prumos_elevador.input_prumos_direito.text():
+            campos_vazios.append(f"Prumo parede direita.")
 
         if campos_vazios:
             dialog = QDialog(self)
@@ -287,15 +237,6 @@ class VaoWidget(QWidget):
         juncao_esq = self.juncoes_layout.juncao_esq.currentText()
         juncao_dir = self.juncoes_layout.juncao_dir.currentText()
         juncoes = [juncao_esq, juncao_dir]
-        prumo = [0, 0]
-        if self.prumos_layout:
-            if self.prumos_layout.input_prumos.text() and self.prumos_layout.input_prumos_direito.text():
-                prumo[0] = int(self.prumos_layout.input_prumos.text())
-                prumo[1] = int(self.prumos_layout.input_prumos_direito.text())
-            elif self.prumos_layout.input_prumos.text():
-                prumo[0] = int(self.prumos_layout.input_prumos.text())
-            else:
-                prumo[1] = int(self.prumos_layout.input_prumos_direito.text())
 
         for altura, nivel in zip(self.alturas, self.niveis):
             if altura.text() and nivel.text():
@@ -311,5 +252,4 @@ class VaoWidget(QWidget):
             'niveis': niveis,
             'angulos': angulos,
             'juncoes': juncoes,
-            'prumos': prumo
         }

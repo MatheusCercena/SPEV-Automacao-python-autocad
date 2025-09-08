@@ -9,11 +9,10 @@ from src.aberturas import distribuir_vidros_por_lado
 from src.calcs_cad import calcular_gaps_furos, calcular_gaps_vidro
 from src.perfis_U import distribuir_perfis_U_por_lado
 
-acad, acad_ModelSpace = get_acad()
 
 def definir_pontos_furos(coord_vidros: list[list[tuple[float, float, float]]], folgas_vidros: list[list[int, int]], quant_vidros: list[list[int]], angs_in: list[float], angs_paredes: list[float], espessura_v: int) -> list[list[tuple[float, float, float]]]:
     """Define os pontos para furação dos perfis U.
-    
+
     Args:
         coord_vidros: Lista contendo as coordenadas dos vidros por lado.
         folgas_vidros: Lista contendo as folgas dos vidros por lado.
@@ -21,10 +20,11 @@ def definir_pontos_furos(coord_vidros: list[list[tuple[float, float, float]]], f
         angs_in: Lista contendo os ângulos internos.
         angs_paredes: Lista contendo os ângulos das paredes.
         espessura_v: Espessura do vidro em milímetros.
-    
+
     Returns:
         list: Lista de listas contendo as coordenadas dos pontos de furação por lado.
     """
+    acad, acad_ModelSpace = get_acad()
 
     folga_parede = -12
     folga_passante = 2
@@ -45,7 +45,7 @@ def definir_pontos_furos(coord_vidros: list[list[tuple[float, float, float]]], f
 
     for index, lado in enumerate(coord_vidros_reorganizada):
         quant_lado = 0
-        for i, vidro in enumerate(lado):            
+        for i, vidro in enumerate(lado):
             coord = []
             coord_50 = []
             p1 = vidro[0]
@@ -71,7 +71,7 @@ def definir_pontos_furos(coord_vidros: list[list[tuple[float, float, float]]], f
 
             #lado direito  (desloc_p2)
             if i == len(lado)-1 and folgas_vidros[index][1] == folga_parede:
-                desloc_p2 = folga_parede*-1 + calcular_gaps_furos(angs_paredes[1]) 
+                desloc_p2 = folga_parede*-1 + calcular_gaps_furos(angs_paredes[1])
             elif i == len(lado)-1 and folgas_vidros[index][1] == folga_passante:
                 desloc_p2 = calcular_gaps_furos(angs_in[index])*-1 + folga_passante - 50
                 cota_de_50_p1 = desloc_p2
@@ -111,13 +111,14 @@ def definir_pontos_furos(coord_vidros: list[list[tuple[float, float, float]]], f
     return coordenadas
 
 def redefinir_pontos_furos(coord_furos: list[list[tuple[float, float, float]]], quant_furos_lado: list[int], medidas_perfis_U, coord_perfis_U: list[list[tuple[float, float, float]]], offset: int, espessura_v: int) -> list[list[tuple[float, float, float]]]:
+
     espessura_perfil_U = 20
     offset_corrigido = offset + espessura_v - espessura_perfil_U
 
     coordenadas_redefinidas = []
 
-    perfis_U = distribuir_perfis_U_por_lado(medidas_perfis_U, coord_perfis_U)  
-    furos = distribuir_furos_por_lado(coord_furos, quant_furos_lado)       
+    perfis_U = distribuir_perfis_U_por_lado(medidas_perfis_U, coord_perfis_U)
+    furos = distribuir_furos_por_lado(coord_furos, quant_furos_lado)
 
     for lado in range(len(perfis_U)):
         coordenadas_lado_redefinidas = []
@@ -130,7 +131,7 @@ def redefinir_pontos_furos(coord_furos: list[list[tuple[float, float, float]]], 
 
         ini_secao = ''
         ini_secao = linha_paralela_com_offset(perfis_u_lado[0][0], perfis_u_lado[0][1], offset_corrigido)[0]
-        for s, perfil in enumerate(perfis_u_lado):  
+        for s, perfil in enumerate(perfis_u_lado):
             ini_perfil, fim_perfil = linha_paralela_com_offset(perfil[0], perfil[1], offset_corrigido)
             perfil_normalizado = normalizar_coordenadas(ini_secao, ini_perfil, fim_perfil)
             perfis_U_normalizados.append(perfil_normalizado)
@@ -138,9 +139,9 @@ def redefinir_pontos_furos(coord_furos: list[list[tuple[float, float, float]]], 
         for furo in furos_lado:
             furo_normalizado = normalizar_coordenadas(furos_lado[0][0], furo[0], furo[1])
             furos_normalizados.append(furo_normalizado)
-            
+
         for i, furo_norm in enumerate(furos_normalizados):
-            perfil_tocado = [] 
+            perfil_tocado = []
             for index, perfil_normalizado in enumerate(perfis_U_normalizados):
                 for ponto in range(2):
                     if esta_entre(furo_norm[ponto], perfil_normalizado[0], perfil_normalizado[1]) == True:
@@ -160,13 +161,13 @@ def redefinir_pontos_furos(coord_furos: list[list[tuple[float, float, float]]], 
 
 def distribuir_furos_por_lado(coord_furos: list[tuple[float, float, float]], quant_furos_por_lado: list[list[tuple[float, float, float]]]) -> list[list[tuple[float, float, float]]]:
     """Distribui os vidros por lado da sacada.
-    
+
     Args:
         quant_vidros: Lista com a quantidade de vidros por lado.
 
     Returns:
         list: Lista de sublistas com números sequenciais dos vidros de cada lado.
-        
+
     Example:
         Entrada: [3, 5, 2]
         Saída: [[1, 2, 3], [4, 5, 6, 7, 8], [9, 10]]

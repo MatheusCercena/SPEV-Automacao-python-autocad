@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QDialog
 
-from UI.elementos_main import scroll_area
+from UI.elementos_main import scroll_area, dados_extras, Ordem_Servico
 from UI.vao import VaoWidget
 
 class VaosWidget(QWidget):
@@ -14,17 +14,23 @@ class VaosWidget(QWidget):
         layout.setSpacing(4)
         layout.setContentsMargins(5, 5, 5, 5)
 
-        titulo = QLabel('VÃOS')
-        titulo.setStyleSheet('font-weight: bold; font-size: 18px; margin: 5px 0;')
+        self.ordem_servico = Ordem_Servico()
+
+        self.titulo = QLabel('VÃOS')
+        self.titulo.setStyleSheet('font-weight: bold; font-size: 18px; margin: 5px 0;')
 
         self.scroll_area = scroll_area()
 
         self.botao_adicionar_vao = QPushButton('Adicionar Vão')
         self.botao_adicionar_vao.clicked.connect(self.adicionar_vao)
 
-        layout.addWidget(titulo)
+        self.prumos_elevador = dados_extras()
+
+        layout.addLayout(self.ordem_servico)
+        layout.addWidget(self.titulo)
         layout.addWidget(self.scroll_area)
         layout.addWidget(self.botao_adicionar_vao)
+        layout.addLayout(self.prumos_elevador)
 
         self.adicionar_vao()
 
@@ -69,8 +75,10 @@ class VaosWidget(QWidget):
         return True
 
     def get_dados_vaos(self):
+        def get_ordem_servico():
+            return self.ordem_servico.input.text() if self.ordem_servico.input.text() else None
+
         def get_linhas_centro():
-            """Retorna lista de linhas de centro no formato esperado"""
             lcs = []
             for vao in self.vaos:
                 dados_vao = vao.get_dados_vao()
@@ -121,20 +129,18 @@ class VaosWidget(QWidget):
             return juncoes
 
         def get_prumos():
-            prumos = []
-            for i, vao in enumerate(self.vaos):
-                if i == 0 or i == len(self.vaos) -1:
-                    dados_vao = vao.get_dados_vao()
-                    if len(self.vaos) == 1:
-                        prumos.append(dados_vao['prumos'][0])
-                        prumos.append(dados_vao['prumos'][1])
-                    elif i == 0:
-                        prumos.append(dados_vao['prumos'][0])
-                    else:
-                        prumos.append(dados_vao['prumos'][1])
+            prumos = [0, 0]
+
+            prumos[0] = int(self.prumos_elevador.input_prumos.text())
+            prumos[1] = int(self.prumos_elevador.input_prumos_direito.text())
 
             return prumos
 
+        def get_elevador():
+            elevador = int(self.prumos_elevador.input_elevador.text())
+            return elevador
+
+        ordem_servico = get_ordem_servico()
         linhas_centro = get_linhas_centro()
         alturas = get_alturas()
         niveis = get_niveis()
@@ -142,8 +148,10 @@ class VaosWidget(QWidget):
         angulos_paredes, angulos_internos = get_angulos()
         juncoes = get_juncoes()
         prumos = get_prumos()
+        elevador = get_elevador()
 
         dados = {
+            'ordem_servico': ordem_servico,
             'linhas_centro': linhas_centro,
             'alturas': alturas,
             'niveis': niveis,
@@ -152,6 +160,7 @@ class VaosWidget(QWidget):
             'angulos_internos': angulos_internos,
             'juncoes': juncoes,
             'prumos': prumos,
+            'elevador': elevador,
             'aberturas': ''
         }
         for dado in dados.values():

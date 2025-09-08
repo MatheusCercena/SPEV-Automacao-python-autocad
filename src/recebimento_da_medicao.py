@@ -398,3 +398,26 @@ def pedir_elevador() -> int:
         except:
             print(f'[ERRO] O campo "elevador" precisa conter apenas numeros inteiros e ter 4 dígitos.')
     return elevador
+
+def converter_juncoes_valor(juncoes):
+    juncoes_finais = juncoes
+    for juncao in juncoes_finais:
+        if juncao[0] == 'Vidro/Parede':
+            juncao[0] = 0
+        elif juncao[0] == 'Passante':
+            juncao[0] = 1
+        elif juncao[0] == 'Colante':
+            juncao[0] = 2
+        elif juncao[0] == 'Vidro/Vidro':
+            juncao[0] = 3
+
+        if juncao[1] == 'Vidro/Parede':
+            juncao[1] = 0
+        elif juncao[1] == 'Passante':
+            juncao[1] = 1
+        elif juncao[1] == 'Colante':
+            juncao[1] = 2
+        elif juncao[1] == 'Vidro/Vidro':
+            juncao[1] = 3
+
+    return juncoes_finais

@@ -12,21 +12,21 @@ from src.autocad_conn import get_acad
 from math import radians
 from time import sleep
 
-acad, acad_ModelSpace = get_acad()
-acad2 = Autocad(create_if_not_exists=True)
 
 def fazer_parede_esq(lcs: list[float], perfil_U_ext: str, perfil_U_int: str, angulo: float) -> str:
     """Desenha a parede esquerda sem dar fillet com os perfis U.
-    
+
     Args:
         lcs: Lista com coordenadas da linha de centro [x1, y1, x2, y2].
         perfil_U_ext: Handle do perfil U externo.
         perfil_U_int: Handle do perfil U interno.
         angulo: Ângulo de rotação da parede em graus.
-    
+
     Returns:
         str: Handle da parede esquerda criada.
     """
+    acad, acad_ModelSpace = get_acad()
+    acad2 = Autocad(create_if_not_exists=True)
     for _ in range(5):
         try:
             pythoncom.PumpWaitingMessages()
@@ -42,16 +42,19 @@ def fazer_parede_esq(lcs: list[float], perfil_U_ext: str, perfil_U_int: str, ang
 
 def fazer_parede_dir(handles_lcs: list[float], perfil_U_ext: str, perfil_U_int: str, angulo: float) -> str:
     """Desenha a parede direita sem dar fillet com os perfis U.
-    
+
     Args:
         handles_lcs: Lista com coordenadas da linha de centro [x1, y1, x2, y2].
         perfil_U_ext: Handle do perfil U externo.
         perfil_U_int: Handle do perfil U interno.
         angulo: Ângulo de rotação da parede em graus.
-    
+
     Returns:
         str: Handle da parede direita criada.
     """
+    acad, acad_ModelSpace = get_acad()
+    acad2 = Autocad(create_if_not_exists=True)
+
     for _ in range(5):
         try:
             pythoncom.PumpWaitingMessages()
@@ -67,15 +70,17 @@ def fazer_parede_dir(handles_lcs: list[float], perfil_U_ext: str, perfil_U_int: 
 
 def fillet_paredes(handle_perfil_U_ext: str, handle_perfil_U_int: str, handle_parede: str) -> None:
     """Aplica fillets nos perfis U com a parede.
-    
+
     Args:
         handle_perfil_U_ext: Handle do perfil U externo.
         handle_perfil_U_int: Handle do perfil U interno.
         handle_parede: Handle da parede.
-    
+
     Returns:
         None: Função executa comandos no AutoCAD sem retorno.
     """
+    acad, acad_ModelSpace = get_acad()
+    acad2 = Autocad(create_if_not_exists=True)
+
     acad.SendCommand(f'(c:custom_fillet "{handle_perfil_U_ext}" "{handle_parede}")\n')
     acad.SendCommand(f'(c:custom_fillet "{handle_parede}" "{handle_perfil_U_int}")\n')
-    

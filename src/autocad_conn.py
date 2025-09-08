@@ -7,14 +7,14 @@ import win32com.client
 
 def get_acad() -> tuple:
     """Estabelece conexão com o AutoCAD ativo.
-    
+
     Conecta com a instância ativa do AutoCAD e retorna o documento e o ModelSpace.
-    
+
     Returns:
         tuple: Tupla contendo:
             - Documento ativo do AutoCAD
             - ModelSpace do documento
-    
+
     Raises:
         RuntimeError: Se não conseguir conectar com o AutoCAD.
     """

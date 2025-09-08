@@ -11,8 +11,6 @@ from pyautocad import Autocad, APoint
 from math import radians
 from src.autocad_conn import get_acad
 
-cad, acad_ModelSpace = get_acad()
-acad = Autocad(create_if_not_exists=True)
 
 def definir_linhas_de_centro(lcs: list[int], angs_in: list[float]) -> list[list[float, float, float, float]]:
     """Define as posições das linhas de centro no plano cartesiano.
@@ -29,6 +27,9 @@ def definir_linhas_de_centro(lcs: list[int], angs_in: list[float]) -> list[list[
         list: Lista com as posições definidas para cada linha de centro,
               no formato [[xi1, yi1, xf1, yf1], [xi2, yi2, xf2, yf2], [xin, yin, xfn, yfn]].
     """
+    cad, acad_ModelSpace = get_acad()
+    acad = Autocad(create_if_not_exists=True)
+
     lista_de_LCs = lcs.copy()
     linha = acad.model.AddLine(APoint(0, 0), APoint(lcs[0], 0))
     inicio = linha.StartPoint
@@ -91,6 +92,8 @@ def redesenhar_linhas_de_centro(lcs: list[int], angs_in: list[float], sec_princ:
             - Lista com as posições corrigidas para cada linha de centro
             - Lista de handles das linhas de centro desenhadas
     """
+    cad, acad_ModelSpace = get_acad()
+    acad = Autocad(create_if_not_exists=True)
 
     lista_de_LCs = lcs.copy()
     #desenha a seção principal a partir de (0, 0)

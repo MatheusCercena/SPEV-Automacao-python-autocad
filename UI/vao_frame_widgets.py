@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton, QHBoxLayout, QVBoxLa
 from PyQt6.QtCore import Qt, QRegularExpression
 from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QStandardItemModel, QStandardItem
 
-regex = QRegularExpression(r"^-?(?:[0-9]{1,2}|[1-2][0-9]{2}|3[0-5][0-9]|360)(?:\\.[0-9])?$")
+regex = QRegularExpression(r"^-?(?:360|3[0-5][0-9]|[1-2][0-9]{2}|[0-9]{1,2})(?:\.[0-9]+)?$")
 validator = QRegularExpressionValidator(regex)
 
 ALTURA_FIXA = 40
@@ -157,43 +157,3 @@ class BotaoAdicionarAlturas(QPushButton):
         super().__init__('Adicionar altura')
         self.clicked.connect(funcao_adicionar_altura)
 
-class PrumosLayout(QHBoxLayout):
-    def __init__(self):
-        super().__init__()
-        self.lbl_prumos = QLabel('Prumo:')
-        self.lbl_prumos.setFixedWidth(LARGURA_FIXA)
-        self.lbl_prumos.setFixedHeight(40)
-        self.lbl_prumos.setAlignment(Qt.AlignmentFlag.AlignLeft)
-
-        self.input_prumos = QLineEdit()
-        self.input_prumos.setPlaceholderText('Prumo')
-        self.input_prumos.setFixedWidth(LARGURA_FIXA)
-        self.input_prumos.setFixedHeight(40)
-        self.input_prumos.setValidator(QIntValidator(0, 999))
-
-        self.lbl_prumos_direito = QLabel('Prumo:')
-        self.lbl_prumos_direito.setFixedWidth(LARGURA_FIXA)
-        self.lbl_prumos_direito.setFixedHeight(40)
-        self.lbl_prumos_direito.setAlignment(Qt.AlignmentFlag.AlignLeft)
-
-        self.input_prumos_direito = QLineEdit()
-        self.input_prumos_direito.setPlaceholderText('Prumo')
-        self.input_prumos_direito.setFixedWidth(LARGURA_FIXA)
-        self.input_prumos_direito.setFixedHeight(40)
-        self.input_prumos_direito.setValidator(QIntValidator(0, 999))
-
-    def adicionar_a_esquerda(self):
-        self.addWidget(self.lbl_prumos)
-        self.addWidget(self.input_prumos)
-        self.addStretch()
-
-    def adicionar_a_direita(self):
-        self.addStretch()
-        self.addWidget(self.lbl_prumos_direito)
-        self.addWidget(self.input_prumos_direito)
-
-    def adicionar_completo(self):
-        self.addWidget(self.lbl_prumos)
-        self.addWidget(self.input_prumos)
-        self.addWidget(self.lbl_prumos_direito)
-        self.addWidget(self.input_prumos_direito)
