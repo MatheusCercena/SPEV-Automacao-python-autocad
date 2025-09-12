@@ -1,5 +1,5 @@
 from pathlib import Path
-import sys
+import sys, os
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QStackedWidget, QVBoxLayout
 
@@ -78,8 +78,14 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    projetar({}, 'TESTE')
-    app.setStyleSheet(Path("UI/styles.qss").read_text(encoding="utf-8"))
+    # projetar({}, 'TESTE')
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(__file__)
+
+    qss_path = os.path.join(base_path, 'UI', 'styles.qss')
+    app.setStyleSheet(Path(qss_path).read_text(encoding="utf-8"))
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
