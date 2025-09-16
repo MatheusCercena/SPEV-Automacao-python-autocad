@@ -44,7 +44,7 @@ def projetar(dados, codigo_projeto):
         # sentidos_abert = [[1, 12, 1, 2, 'esquerda']]
         # juncoes = [[0, 2], [1, 0]]
 
-        # EXEMPLO 2
+        # # EXEMPLO 2
         # ordem_servico = '1326/25-1'
         # lcs = [1000, 3000, 2000]
         # alturas = [[1570, 1574], [1575, 1578, 1582, 1579], [1577, 1580]]
@@ -231,26 +231,27 @@ def projetar(dados, codigo_projeto):
         # print(f'Lista de ferragens: {lista_ferragens}')
         # print(f'Listagem de perfis: {lista_perfis_rolo}')
 
-        # dados_sacada = {
-        #     'ordem_servico': ordem_servico,
-        #     'aberturas': sentidos_abert,
-        #     'giratorios': giratorios,
-        #     'altura_vao': altura_vao,
-        #     'altura_vidro': altura_vidro,
-        #     'altura_painel': altura_painel,
-        #     'altura_pe3': altura_pe3,
-        #     'quantidade_vidros': sum(quant_vidros),
-        #     'quantidade_pe3': quantidade_pe3,
-        #     'sucata_pedacos': sucata_pedacos,
-        #     'sucata_inteira': sucata_inteira,
-        # }
+        dados_sacada = {
+            'ordem_servico': ordem_servico,
+            'aberturas': sentidos_abert,
+            'giratorios': giratorios,
+            'altura_vao': altura_vao,
+            'altura_vidro': altura_vidro,
+            'altura_painel': altura_painel,
+            'altura_pe3': altura_pe3,
+            'quantidade_vidros': sum(quant_vidros),
+            'quantidade_pe3': quantidade_pe3,
+            'sucata_pedacos': sucata_pedacos,
+            'sucata_inteira': sucata_inteira,
+        }
 
 
         # cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo)
         log_spev(f'Fim da execução ID: {id}')
-        # QMessageBox.information(None, "Finalizado", "A sacada foi desenhada no AutoCAD. Clique em OK para fechar esta janela.")
+        QMessageBox.information(None, "Finalizado", "A sacada foi desenhada no AutoCAD. Clique em OK para fechar esta janela.")
 
     except Exception as e:
+        print(f'Erro: {e}')
         log_spev(f'Erro: {e} não rastreado - {traceback.format_exc()}')
         log_spev(f'Fim da execução ID: {id}')
         QMessageBox.critical(None, "Erro", "Ocorreu um erro. Feche esta janela para continuar.")

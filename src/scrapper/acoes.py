@@ -2,6 +2,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 def esperar_ajax(navegador):
     espera = WebDriverWait(navegador, 10)
@@ -36,3 +37,19 @@ def pegar_texto(navegador, tipo_seletor, seletor):
     espera_objeto.until(EC.element_to_be_clickable((tipo_seletor, seletor)))
     objeto = navegador.find_element(tipo_seletor, seletor)
     return objeto.text
+
+def limpar_campo(navegador, tipo_seletor, seletor):
+    esperar_ajax(navegador)
+    espera_objeto = WebDriverWait(navegador, 10)
+    espera_objeto.until(EC.element_to_be_clickable((tipo_seletor, seletor)))
+    objeto = navegador.find_element(tipo_seletor, seletor)
+    navegador.execute_script("arguments[0].scrollIntoView({block: 'center'})", objeto)
+    objeto.clear()
+
+def limpar_campo_backspace(navegador, tipo_seletor, seletor):
+    esperar_ajax(navegador)
+    espera_objeto = WebDriverWait(navegador, 10)
+    espera_objeto.until(EC.element_to_be_clickable((tipo_seletor, seletor)))
+    objeto = navegador.find_element(tipo_seletor, seletor)
+    navegador.execute_script("arguments[0].scrollIntoView({block: 'center'})", objeto)
+    objeto.send_keys(Keys.BACKSPACE * 50)

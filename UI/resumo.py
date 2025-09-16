@@ -22,18 +22,24 @@ class ResumoWidget(QWidget):
         self.btn_export.clicked.connect(self.exportar_json)
 
     def exportar_json(self):
-        codigo_projeto = criar_alfanumerico()
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        import os
+        try:
+            codigo_projeto = criar_alfanumerico()
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-        file_path = f'exportacoes\\projeto_{codigo_projeto}_{timestamp}.json'
-        if file_path:
+            pasta_export = 'exportacoes'
+            if not os.path.exists(pasta_export):
+                os.makedirs(pasta_export)
+
+            file_path = os.path.join(pasta_export, f'projeto_{codigo_projeto}_{timestamp}.json')
 
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(self.dados, f, indent=4, ensure_ascii=False)
             QMessageBox.information(self, 'Sucesso', f'Dados exportados para {file_path}')
-        else:
-            QMessageBox.information(self, 'Erro', f'Pasta "exportacoes" não encontrada dentro da pasta do programa.')
-
+        except Exception as e:
+            print(f'Erro: {e}')
+            QMessageBox.critical(self, 'Erro', f'Erro ao exportar dados: {e}')
+            return
         projetar(self.dados, codigo_projeto)
 
     def atualizar_dados(self, dados):

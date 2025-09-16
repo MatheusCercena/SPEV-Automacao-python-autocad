@@ -12,7 +12,6 @@ from src.autocad_conn import get_acad
 from math import radians
 from time import sleep
 
-
 def fazer_parede_esq(lcs: list[float], perfil_U_ext: str, perfil_U_int: str, angulo: float) -> str:
     """Desenha a parede esquerda sem dar fillet com os perfis U.
 
