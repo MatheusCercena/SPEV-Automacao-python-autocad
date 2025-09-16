@@ -14,7 +14,7 @@ def cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo):
     escrever(navegador, By.ID, 'medida1', lista_perfis_rolo['comprimento_polietileno'])
     escrever(navegador, By.ID, 'medida2', dados_sacada['altura_vao'])
     escrever(navegador, By.ID, 'medida3', len(dados_sacada['aberturas']))
-    escrever(navegador, By.ID, 'medida4', len(dados_sacada['giratorios']))
+    escrever(navegador, By.ID, 'medida4', dados_sacada['quantidade_vidros'])
 
     if dados_sacada['quantidade_pe3'] == 2:
         possibilidade_pe3 = '1336'
@@ -39,14 +39,15 @@ def apagar_itens_ferragens_ecg(navegador):
     itens.pop(0)
     itens.pop(-1)
     for i, item in enumerate(itens):
-        escrever(navegador, By.ID, f'F{i}qtd', '0')
+        limpar_campo(navegador, By.ID, f'F{i+1}qtd')
 
 def apagar_itens_perfis_ecg(navegador):
     itens = navegador.find_elements(By.CSS_SELECTOR, '#tabela_P > tbody > tr')
     itens.pop(0)
     itens.pop(-1)
     for i, item in enumerate(itens):
-        escrever(navegador, By.ID, f'P{i}qtd', '0')
+
+        limpar_campo(navegador, By.ID, f'P{i+1}qtd')
 
 def adicionar_itens_ferragem_ecg(navegador, lista_ferragens):
     itens = navegador.find_elements(By.CSS_SELECTOR, '#tabela_P > tbody > tr')
@@ -65,8 +66,18 @@ def adicionar_itens_ferragem_ecg(navegador, lista_ferragens):
         'ESTACIONAMENTO': lista_ferragens['quant_estacionamento'],
         'ETIQUETAKAIZEN': lista_ferragens['quantidade_adesivos_kaizen'],
     }
-    contador = len(itens)+1
+    contador_max = len(itens)+1
+    contador = 1
     for key, value in nomes_ferragens_ecg.items():
-        escrever(navegador, By.CSS_SELECTOR, f'.custom-F{contador}id', key)
+        if contador > contador_max:
+            break
+
+        clicar(navegador, By.CSS_SELECTOR, f'#td_F_{contador} > img:nth-child(1)')
+        clicar(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id')
+        limpar_campo(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id')
+        clicar(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id')
+        limpar_campo_backspace(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id')
+        escrever(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id', key)
         escrever(navegador, By.ID, f'F{contador}qtd', value)
         contador += 1
+

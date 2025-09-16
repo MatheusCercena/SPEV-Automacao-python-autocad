@@ -21,8 +21,11 @@ def log_spev(mensagem: str, nome_arquivo="spev.log"):
     """
     try:
         pasta_spev = os.path.dirname(sys.executable)
-
         caminho_log = os.path.join(pasta_spev, nome_arquivo)
+
+        pasta_destino = os.path.dirname(caminho_log)
+        if pasta_destino and not os.path.exists(pasta_destino):
+            os.makedirs(pasta_destino)
 
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         texto_log = f"[{timestamp}] {mensagem}\n"

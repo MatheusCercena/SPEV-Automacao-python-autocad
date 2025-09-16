@@ -62,15 +62,15 @@ def formula_kit_painel_instalacao(giratorios):
     return len(giratorios)
 
 def formula_polietileno(medidas_perfis_U):
-    comprimento_sacada = sum([round(sum(lado), 0) for lado in medidas_perfis_U])
+    comprimento_sacada = int(sum([round(sum(lado), 0) for lado in medidas_perfis_U]))
     return comprimento_sacada
 
 def formula_escovinha_7x8(medidas_perfis_U):
-    comprimento_sacada = sum([round(sum(lado), 0) for lado in medidas_perfis_U])
+    comprimento_sacada = int(sum([round(sum(lado), 0) for lado in medidas_perfis_U]))
     return comprimento_sacada
 
 def formula_escovinha_5x7(comprimento_pe3, quantidade_pe3):
-    return (comprimento_pe3 - 164) * quantidade_pe3
+    return int((comprimento_pe3 - 164) * quantidade_pe3)
 
 def formula_fecho_leito(giratorios):
     return len(giratorios)
