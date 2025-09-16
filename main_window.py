@@ -9,8 +9,6 @@ from UI.sentidos_abertura import SentidosAberturaWidget
 from UI.resumo import ResumoWidget
 from src.main import projetar
 
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()

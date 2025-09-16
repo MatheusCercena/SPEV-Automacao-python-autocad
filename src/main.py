@@ -45,18 +45,18 @@ def projetar(dados, codigo_projeto):
         # juncoes = [[0, 2], [1, 0]]
 
         # EXEMPLO 2
-        ordem_servico = '1326/25-1'
-        lcs = [1000, 3000, 2000]
-        alturas = [[1570, 1574], [1575, 1578, 1582, 1579], [1577, 1580]]
-        niveis = [[0, -2], [-4, -9, -12, -12], [-12, -9]]
-        quant_vidros = [2, 6, 4]
-        angs_in = [-45.0, -45.0]
-        sentidos_abert = [[1, 5, 1, 2, 'esquerda'], [6, 12, 12, 11, 'direita']]
-        juncoes = [[0, 3], [3, 3], [3, 0]]
+        # ordem_servico = '1326/25-1'
+        # lcs = [1000, 3000, 2000]
+        # alturas = [[1570, 1574], [1575, 1578, 1582, 1579], [1577, 1580]]
+        # niveis = [[0, -2], [-4, -9, -12, -12], [-12, -9]]
+        # quant_vidros = [2, 6, 4]
+        # angs_in = [-45.0, -45.0]
+        # sentidos_abert = [[1, 5, 1, 2, 'esquerda'], [6, 12, 12, 11, 'direita']]
+        # juncoes = [[0, 3], [3, 3], [3, 0]]
 
-        angs_paredes = [0.0, 0.0]
-        prumos = [0, 0]
-        elevador = 2600
+        # angs_paredes = [0.0, 0.0]
+        # prumos = [0, 0]
+        # elevador = 2600
 
         # INSERCAO MANUAL DOS DADOS
         # lcs = pedir_linhas_de_centro()
@@ -71,17 +71,17 @@ def projetar(dados, codigo_projeto):
         # elevador = pedir_elevador()
 
         # PEGA DADOS DA INTERFACE
-        # ordem_servico = dados['ordem_servico']
-        # lcs = dados['linhas_centro']
-        # alturas = dados['alturas']
-        # niveis = dados['niveis']
-        # quant_vidros = dados['quantidade_vidros']
-        # sentidos_abert = dados['aberturas']
-        # angs_in = [180 - angulo for angulo in dados['angulos_internos']]
-        # angs_paredes = [90 - angulo for angulo in dados['angulos_paredes']]
-        # prumos = dados['prumos']
-        # juncoes = converter_juncoes_valor(dados['juncoes'])
-        # elevador = dados['elevador']
+        ordem_servico = dados['ordem_servico']
+        lcs = dados['linhas_centro']
+        alturas = dados['alturas']
+        niveis = dados['niveis']
+        quant_vidros = dados['quantidade_vidros']
+        sentidos_abert = dados['aberturas']
+        angs_in = [180 - angulo for angulo in dados['angulos_internos']]
+        angs_paredes = [90 - angulo for angulo in dados['angulos_paredes']]
+        prumos = dados['prumos']
+        juncoes = converter_juncoes_valor(dados['juncoes'])
+        elevador = dados['elevador']
 
         print(f'OS: {ordem_servico}')
         print(f'LCS: {lcs}')
@@ -209,44 +209,44 @@ def projetar(dados, codigo_projeto):
         posicionar_angulos(coord_lcs, angs_in)
 
         # Perfis_extras
-        quantidade_pe3 = calcular_quantidade_pe3(giratorios, quant_vidros)
+        # quantidade_pe3 = calcular_quantidade_pe3(giratorios, quant_vidros)
 
         # Lista de ferragens e perfis_rolo
-        dados_ferragens_perfis_rolo = {
-            'juncoes': juncoes,
-            'aberturas': sentidos_abert,
-            'medidas_bocas': medidas_bocas,
-            'giratorios': giratorios,
-            'quantidade_vidros': quant_vidros,
-            'medidas_perfis_U': medidas_perfis_U,
-            'comprimento_pe3': altura_pe3,
-            'quantidade_pe3' : quantidade_pe3,
-            'vidros': vidros,
-            'medidas_leitos': medidas_leitos,
-            'altura_pe3': altura_pe3
-        }
-        lista_ferragens = calcular_lista_ferragens(dados_ferragens_perfis_rolo)
-        lista_perfis_rolo = calcular_lista_perfis_rolo(dados_ferragens_perfis_rolo)
+        # dados_ferragens_perfis_rolo = {
+        #     'juncoes': juncoes,
+        #     'aberturas': sentidos_abert,
+        #     'medidas_bocas': medidas_bocas,
+        #     'giratorios': giratorios,
+        #     'quantidade_vidros': quant_vidros,
+        #     'medidas_perfis_U': medidas_perfis_U,
+        #     'comprimento_pe3': altura_pe3,
+        #     'quantidade_pe3' : quantidade_pe3,
+        #     'vidros': vidros,
+        #     'medidas_leitos': medidas_leitos,
+        #     'altura_pe3': altura_pe3
+        # }
+        # lista_ferragens = calcular_lista_ferragens(dados_ferragens_perfis_rolo)
+        # lista_perfis_rolo = calcular_lista_perfis_rolo(dados_ferragens_perfis_rolo)
 
-        print(f'Lista de ferragens: {lista_ferragens}')
-        print(f'Listagem de perfis: {lista_perfis_rolo}')
+        # print(f'Lista de ferragens: {lista_ferragens}')
+        # print(f'Listagem de perfis: {lista_perfis_rolo}')
 
-        dados_sacada = {
-            'ordem_servico': ordem_servico,
-            'aberturas': sentidos_abert,
-            'giratorios': giratorios,
-            'altura_vao': altura_vao,
-            'altura_vidro': altura_vidro,
-            'altura_painel': altura_painel,
-            'altura_pe3': altura_pe3,
-            'quantidade_vidros': sum(quant_vidros),
-            'quantidade_pe3': quantidade_pe3,
-            'sucata_pedacos': sucata_pedacos,
-            'sucata_inteira': sucata_inteira,
-        }
+        # dados_sacada = {
+        #     'ordem_servico': ordem_servico,
+        #     'aberturas': sentidos_abert,
+        #     'giratorios': giratorios,
+        #     'altura_vao': altura_vao,
+        #     'altura_vidro': altura_vidro,
+        #     'altura_painel': altura_painel,
+        #     'altura_pe3': altura_pe3,
+        #     'quantidade_vidros': sum(quant_vidros),
+        #     'quantidade_pe3': quantidade_pe3,
+        #     'sucata_pedacos': sucata_pedacos,
+        #     'sucata_inteira': sucata_inteira,
+        # }
 
 
-        cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo)
+        # cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo)
         log_spev(f'Fim da execução ID: {id}')
         # QMessageBox.information(None, "Finalizado", "A sacada foi desenhada no AutoCAD. Clique em OK para fechar esta janela.")
 

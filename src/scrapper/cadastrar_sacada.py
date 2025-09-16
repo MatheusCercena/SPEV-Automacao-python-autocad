@@ -32,7 +32,8 @@ def cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo):
     WebDriverWait(navegador, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
     apagar_itens_ferragens_ecg(navegador)
     apagar_itens_perfis_ecg(navegador)
-    adicionar_itens_ferragem_ecg(navegador, lista_ferragens)
+    adicionar_itens_cadastro(navegador, lista_ferragens, 'F')
+    adicionar_itens_cadastro(navegador, lista_perfis_rolo, 'P')
 
 def apagar_itens_ferragens_ecg(navegador):
     itens = navegador.find_elements(By.CSS_SELECTOR, '#tabela_F > tbody > tr')
@@ -48,25 +49,27 @@ def apagar_itens_perfis_ecg(navegador):
     for i, item in enumerate(itens):
         escrever(navegador, By.ID, f'P{i}qtd', '0')
 
-def adicionar_itens_ferragem_ecg(navegador, lista_ferragens):
-    itens = navegador.find_elements(By.CSS_SELECTOR, '#tabela_P > tbody > tr')
+def adicionar_itens_cadastro(navegador, lista_itens, indicador):
+    ''' indicador deve ser igual a F(ferragem) ou P (perfil)'''
+    itens = navegador.find_elements(By.CSS_SELECTOR, f'#tabela_{indicador} > tbody > tr')
     itens.pop(0)
     itens.pop(-1)
 
     nomes_ferragens_ecg = {
-        'KITAPARADORINOX-PINODUPLO': lista_ferragens['quant_kit_aparador'],
-        'FECHOLEITO': lista_ferragens['quant_fecho_leito'],
-        'MOLDURA': lista_ferragens['quant_molduras'],
-        'GIRATÓRIO': lista_ferragens['quant_giratorio'],
-        'MOLADOTRILHO': lista_ferragens['quant_molas'],
-        'KITPAINEL': lista_ferragens['quant_kit_painel_producao'],
-        'ADESIVOMOLA': lista_ferragens['quantidade_adesivos_cor'],
-        'ETIQUETAVERSATEEL': lista_ferragens['quantidade_adesivos_versateel'],
-        'ESTACIONAMENTO': lista_ferragens['quant_estacionamento'],
-        'ETIQUETAKAIZEN': lista_ferragens['quantidade_adesivos_kaizen'],
+        'KITAPARADORINOX-PINODUPLO': lista_itens['quant_kit_aparador'],
+        'FECHOLEITO': lista_itens['quant_fecho_leito'],
+        'MOLDURA': lista_itens['quant_molduras'],
+        'GIRATÓRIO': lista_itens['quant_giratorio'],
+        'MOLADOTRILHO': lista_itens['quant_molas'],
+        'KITPAINEL': lista_itens['quant_kit_painel_producao'],
+        'ADESIVOMOLA': lista_itens['quantidade_adesivos_cor'],
+        'ETIQUETAVERSATEEL': lista_itens['quantidade_adesivos_versateel'],
+        'ESTACIONAMENTO': lista_itens['quant_estacionamento'],
+        'ETIQUETAKAIZEN': lista_itens['quantidade_adesivos_kaizen'],
     }
     contador = len(itens)+1
     for key, value in nomes_ferragens_ecg.items():
-        escrever(navegador, By.CSS_SELECTOR, f'.custom-F{contador}id', key)
-        escrever(navegador, By.ID, f'F{contador}qtd', value)
+        escrever(navegador, By.CSS_SELECTOR, f'.custom-{indicador}{contador}id', key)
+        escrever(navegador, By.ID, f'{indicador}{contador}qtd', value)
         contador += 1
+
