@@ -113,11 +113,11 @@ class VaosWidget(QWidget):
             for i, vao in enumerate(self.vaos):
                 dados_vao = vao.get_dados_vao()
                 if i == 0:
-                    angs_paredes.append(dados_vao['angulos'][0])
+                    angs_paredes.append(90 - dados_vao['angulos'][0])
                 if i < len(self.vaos) - 1 and len(self.vaos) > 0:
-                    angs_in.append(180 - dados_vao['angulos'][1])
+                    angs_in.append((180 - dados_vao['angulos'][1])*-1)
                 if i == len(self.vaos) - 1:
-                    angs_paredes.append(dados_vao['angulos'][1])
+                    angs_paredes.append(90 - dados_vao['angulos'][1])
 
             return angs_paredes, angs_in
 

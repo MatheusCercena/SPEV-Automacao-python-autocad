@@ -7,6 +7,7 @@ from src.logs import log_spev
 
 def verificar_se_boca_bate_na_mola(molas, boca, sentido):
     ''' Verifica se a boca está batendo em alguma mola. '''
+    distancia_boca = 0
     for mola in molas:
         if mola-34 <= boca <= mola +34:#boca está batendo na mola
             if sentido == 'esquerda':
