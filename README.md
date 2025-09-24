@@ -22,15 +22,14 @@ Siga as etapas na interface para inserir os dados do projeto e gerar os arquivos
 - `exportacoes/` - Arquivos JSON gerados
 
 # TODO
-Finalizar interface - adicionar juncoes, prumos e elevador + validacoes
+
+Fazer projeto padrao no ecg para cadastro do spev
+
+Adicionar numeracao dos vidros
 
 Adicionar angulos das paredes e prumos no autocad
 
 Adicionar as ferragens no layout e puxar as formulas
-
-Depois de tudo fazer listagem de materiais para cadastrar
-
-Cadastrar materiais no ecg
 
 Corrigir erros de calculos na funcao de folgas/alturas e niveis
 
@@ -39,14 +38,10 @@ Pegar dados da obra no ecg e completar cabeçalho
 Adicionar linhas de sentido de abertura.
 Adicionar arcos de porta
 Adicionar detalhamentos de passantes/colantes
-Adicionar detalhamentos de  de leito
 Adicionar tabelas com vidro de guarda-corpo
-Adicionar detalhamentos de corte no trilho
 
 Pegar input com dados de perfis e descrição de onde vao, para adicionar nas observacoes
 Adicionar informaçoes flutuantes para produção, instalação, transporte, usinagem, etc.
+
 Conferir se fonte está em tamanho adequado
-Encaixar informações na folha
-Cadastrar tudo no ecg conforme projeto
-Melhorar logica de divisao de trilhos pra considerar a largura da secao do lado
 Adicionar logica pra posicionar as cotas de dreno e furo automaticamente sem precisar de intervencao

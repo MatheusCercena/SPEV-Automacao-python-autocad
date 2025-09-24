@@ -1,11 +1,6 @@
 from math import ceil
 from src.calcs_vetor import contar_entre_numeros
 
-# PEGAR TODAS AS POSICOES DO PAPERSPACE
-# FAZER AS FORMULAS DAS FERRAGENS - feito
-# VER O QUE PRECISA PEGAR DO ECG PELO SELENIUM E DA AUTOMACAO DE TRTS
-
-
 def formula_tampa_de_leito(juncoes):
     juncoes_lista = [juncao for lado in juncoes for juncao in lado]
     quantidade = 0
@@ -30,16 +25,6 @@ def formula_molas(sentidos_abert):
         molas += quant_molas
     return molas
 
-def formula_tubo_aparador(sentidos_abert):
-    tubos = []
-    for sentido in sentidos_abert:
-        quant_vidros = contar_entre_numeros(sentido[0], sentido[1])
-        tamanho_aparador = 30*(quant_vidros + 2)
-        if tamanho_aparador < 180:
-            tamanho_aparador = 180
-        tubos.append(tamanho_aparador)
-    return tubos
-
 def formula_kit_aparador(giratorios):
     return len(giratorios)
 
@@ -61,17 +46,6 @@ def formula_kit_painel_producao(quant_vidros, giratorios):
 def formula_kit_painel_instalacao(giratorios):
     return len(giratorios)
 
-def formula_polietileno(medidas_perfis_U):
-    comprimento_sacada = int(sum([round(sum(lado), 0) for lado in medidas_perfis_U]))
-    return comprimento_sacada
-
-def formula_escovinha_7x8(medidas_perfis_U):
-    comprimento_sacada = int(sum([round(sum(lado), 0) for lado in medidas_perfis_U]))
-    return comprimento_sacada
-
-def formula_escovinha_5x7(comprimento_pe3, quantidade_pe3):
-    return int((comprimento_pe3 - 164) * quantidade_pe3)
-
 def formula_fecho_leito(giratorios):
     return len(giratorios)
 
@@ -86,7 +60,6 @@ def calcular_lista_ferragens(dados: dict) -> dict:
     quant_tampas_leito = formula_tampa_de_leito(dados['juncoes'])
     quant_molduras = formula_molduras(dados['medidas_bocas'])
     quant_molas = formula_molas(dados['aberturas'])
-    comprimento_tubo_aparador = formula_tubo_aparador(dados['aberturas'])
     quant_kit_aparador = formula_kit_aparador(dados['giratorios'])
     quant_estacionamento = formula_estacionamento(dados['aberturas'])
     quant_giratorio = formula_giratorio(dados['giratorios'])
@@ -99,7 +72,6 @@ def calcular_lista_ferragens(dados: dict) -> dict:
         'quant_tampas_leito': quant_tampas_leito,
         'quant_molduras': quant_molduras,
         'quant_molas': quant_molas,
-        'comprimento_tubo_aparador': comprimento_tubo_aparador,
         'quant_kit_aparador': quant_kit_aparador,
         'quant_estacionamento': quant_estacionamento,
         'quant_giratorio': quant_giratorio,
@@ -113,25 +85,3 @@ def calcular_lista_ferragens(dados: dict) -> dict:
 
     return lista_ferragens
 
-def calcular_lista_perfis_rolo(dados):
-    lista_vidros = [vidro for vao in dados['vidros'] for vidro in vao]
-    lista_leitos = [round(medida, 0) for medida in dados['medidas_leitos']]
-    lista_perfis_U = [round(medida, 0) for vao in dados['medidas_perfis_U'] for medida in vao]
-    lista_pe3 = [dados['altura_pe3'] for _ in range(dados['quantidade_pe3'])]
-
-    comprimento_polietileno = formula_polietileno(dados['medidas_perfis_U'])
-    comprimento_escovinha_7x8 = formula_escovinha_7x8(dados['medidas_perfis_U'])
-    comprimento_escovinha_5x7 = formula_escovinha_5x7(dados['comprimento_pe3'], dados['quantidade_pe3'])
-
-    listagem_perfis_rolo = {
-        'lista_vidros': lista_vidros,
-        'lista_leitos': lista_leitos,
-        'lista_perfis_U': lista_perfis_U,
-        'lista_pe3': lista_pe3,
-        'comprimento_polietileno': comprimento_polietileno,
-        'comprimento_escovinha_7x8': comprimento_escovinha_7x8,
-        'comprimento_escovinha_5x7': comprimento_escovinha_5x7,
-
-    }
-
-    return listagem_perfis_rolo

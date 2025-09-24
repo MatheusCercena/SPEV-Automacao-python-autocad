@@ -8,13 +8,14 @@ from src.cant_ajustes_angulo import necessidade_cant_ajuste, infos_cant_ajuste
 from src.comandos_cad import carregar_comandos, remover_guias, adicionar_texto_modelspace
 from src.cotas import cotar_medida_total
 from src.drenos import definir_coord_drenos
-from src.ferragens import calcular_lista_ferragens, calcular_lista_perfis_rolo
+from src.ferragens import calcular_lista_ferragens
 from src.furos import definir_pontos_furos
 from src.leitos import folgas_leitos, desenhar_guias_leitos, desenhar_leitos
 from src.limpar import limpar_tudo
 from src.linhas_de_centro import definir_linhas_de_centro, redesenhar_linhas_de_centro, definir_coord_lcs
 from src.logs import log_spev
 from src.paredes import fazer_parede_esq, fazer_parede_dir, fillet_paredes
+from src.perfis import calcular_lista_perfis_rolo
 from src.perfis_U import offset_perfis_U, fillet_perfis_U, definir_coord_perfis_U, redefinir_coord_perfis_U
 from src.perfis_extras import calcular_quantidade_pe3
 from src.pivos import definir_pivos
@@ -45,15 +46,14 @@ def projetar(dados, codigo_projeto):
         # juncoes = [[0, 2], [1, 0]]
 
         # # EXEMPLO 2
-        # ordem_servico = '1326/25-1'
-        # lcs = [1000, 3000, 2000]
-        # alturas = [[1570, 1574], [1575, 1578, 1582, 1579], [1577, 1580]]
-        # niveis = [[0, -2], [-4, -9, -12, -12], [-12, -9]]
-        # quant_vidros = [2, 6, 4]
-        # angs_in = [-45.0, -45.0]
-        # sentidos_abert = [[1, 5, 1, 2, 'esquerda'], [6, 12, 12, 11, 'direita']]
-        # juncoes = [[0, 3], [3, 3], [3, 0]]
-
+        # ordem_servico = '1508/25-1'
+        # lcs = [1000, 3000]
+        # alturas = [[1000], [1000]]
+        # niveis = [[0], [0]]
+        # quant_vidros = [3, 6]
+        # angs_in = [-90.0]
+        # sentidos_abert = [[1, 3, 1, 2, 'esquerda'], [4, 9, 9, 8, 'direita']]
+        # juncoes = [[0, 2], [1, 0]]
         # angs_paredes = [0.0, 0.0]
         # prumos = [0, 0]
         # elevador = 2600
@@ -77,7 +77,6 @@ def projetar(dados, codigo_projeto):
         niveis = dados['niveis']
         quant_vidros = dados['quantidade_vidros']
         sentidos_abert = dados['aberturas']
-        # angs_in = [180 - angulo for angulo in dados['angulos_internos']]
         angs_in = [angulo for angulo in dados['angulos_internos']]
         angs_paredes = [angulo for angulo in dados['angulos_paredes']]
         prumos = dados['prumos']
@@ -184,15 +183,15 @@ def projetar(dados, codigo_projeto):
         sucata_pedacos = sucata_pedacos_inferior + sucata_pedacos_superior
         sucata_inteira = sucata_inteira_inferior + sucata_inteira_superior
 
-        print(f'{' - '*10}SUCATA{' - '*10}')
-        if sucata_pedacos > 0:
-            print(f'A quantidade de sucata em pedaços necessária é {sucata_pedacos}, sendo {sucata_pedacos_inferior} para a parte inferior e {sucata_pedacos_superior} para a parte superior.')
-        else:
-            print('Não é necessário sucata em pedaços.')
-        if sucata_inteira > 0:
-            print(f'A quantidade de sucata inteira necessária é {sucata_inteira}, sendo {sucata_inteira_inferior} para a parte inferior e {sucata_inteira_superior} para a parte superior.')
-        else:
-            print('Não é necessário sucata inteira.')
+        # print(f'{' - '*10}SUCATA{' - '*10}')
+        # if sucata_pedacos > 0:
+        #     print(f'A quantidade de sucata em pedaços necessária é {sucata_pedacos}, sendo {sucata_pedacos_inferior} para a parte inferior e {sucata_pedacos_superior} para a parte superior.')
+        # else:
+        #     print('Não é necessário sucata em pedaços.')
+        # if sucata_inteira > 0:
+        #     print(f'A quantidade de sucata inteira necessária é {sucata_inteira}, sendo {sucata_inteira_inferior} para a parte inferior e {sucata_inteira_superior} para a parte superior.')
+        # else:
+        #     print('Não é necessário sucata inteira.')
         # Pivos
         pivos = definir_pivos(quant_vidros, sentidos_abert, juncoes, medidas_perfis_U, pontos_vidros)
         print(f'Pivos: {pivos}')
@@ -223,11 +222,13 @@ def projetar(dados, codigo_projeto):
             'comprimento_pe3': altura_pe3,
             'quantidade_pe3' : quantidade_pe3,
             'vidros': vidros,
+            'altura_vidros': altura_vidro,
             'medidas_leitos': medidas_leitos,
             'altura_pe3': altura_pe3
         }
+
         lista_ferragens = calcular_lista_ferragens(dados_ferragens_perfis_rolo)
-        lista_perfis_rolo = calcular_lista_perfis_rolo(dados_ferragens_perfis_rolo)
+        lista_perfis_rolo = calcular_lista_perfis_rolo(dados_ferragens_perfis_rolo, prumos)
 
         # print(f'Lista de ferragens: {lista_ferragens}')
         # print(f'Listagem de perfis: {lista_perfis_rolo}')
@@ -246,8 +247,7 @@ def projetar(dados, codigo_projeto):
             'sucata_inteira': sucata_inteira,
         }
 
-
-        cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo)
+        cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo, vidros, altura_vidro)
         log_spev(f'Fim da execução ID: {id}')
         QMessageBox.information(None, "Finalizado", "A sacada foi desenhada no AutoCAD. Clique em OK para fechar esta janela.")
 
