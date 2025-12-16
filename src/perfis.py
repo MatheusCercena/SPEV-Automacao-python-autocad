@@ -8,7 +8,7 @@ def formula_escovinha_7x8(medidas_perfis_U):
     comprimento_sacada = int(sum([round(sum(lado), 0) for lado in medidas_perfis_U]))
     return {'ESCOVINHA6.5X6.5': [2, comprimento_sacada]}
 
-def formula_escovinha_5x8(comprimento_pe3, quantidade_pe3):
+def formula_escovinha_5x8(quantidade_pe3, comprimento_pe3):
     return {'ESCOVINHA5X8CINZA': [quantidade_pe3, int((comprimento_pe3 - 164))]}
 
 def formula_vep(quantidade_vidros, altura_vidros):
@@ -28,7 +28,7 @@ def formula_leito(medidas_leitos):
     return [{'PE-008': [2, medida_leito]} for medida_leito in medidas_leitos]
 
 def formula_perfil_U_inf(medidas_perfis_U):
-    medidas_finais = [int(medida) for lado in medidas_perfis_U for medida in lado]
+    medidas_finais = [round(medida) for lado in medidas_perfis_U for medida in lado]
     for i, medida_U_inf in enumerate(medidas_finais):
         if i == 0 and i == len(medidas_finais)-1:
             medidas_finais.append(medida_U_inf)
@@ -39,7 +39,7 @@ def formula_perfil_U_inf(medidas_perfis_U):
     return [{'PE-1': [1, medida_U_inf]} for medida_U_inf in medidas_finais]
 
 def formula_perfil_U_sup(medidas_perfis_U, prumos):
-    medidas_finais = [int(medida) for lado in medidas_perfis_U for medida in lado]
+    medidas_finais = [round(medida) for lado in medidas_perfis_U for medida in lado]
     for i, medida_U_sup in enumerate(medidas_finais):
         if i == 0 and i == len(medidas_finais)-1:
             medidas_finais[0] = medida_U_sup + prumos[0] + prumos[1]
@@ -50,7 +50,7 @@ def formula_perfil_U_sup(medidas_perfis_U, prumos):
     return [{'CEG-235': [1, medida_U_sup]} for medida_U_sup in medidas_finais]
 
 def formula_trilho(medidas_perfis_U, prumos):
-    medidas_finais = [int(medida) for lado in medidas_perfis_U for medida in lado]
+    medidas_finais = [round(medida) for lado in medidas_perfis_U for medida in lado]
     # for i, medida_U_inf in enumerate(medidas_finais):
     #     if i == 0 and i == len(medidas_finais)-1:
     #         medidas_finais[0] = medida_U_inf + prumos[0] + prumos[1]
@@ -121,8 +121,8 @@ def calcular_lista_perfis_rolo(dados: dict, prumos: list[int, int]) -> list[dict
     polietileno = formula_polietileno(dados['medidas_perfis_U'])
     escovinha_7x8 = formula_escovinha_7x8(dados['medidas_perfis_U'])
     veps = formula_vep(dados['quantidade_vidros'], dados['altura_vidros'])
-    cantoneiras_com_escova = (formula_cantoneira_com_escova(dados['giratorios'], dados['quantidade_vidros'], dados['altura_vidros']))
-    escovinha_5x8 = formula_escovinha_5x8(cantoneiras_com_escova[0], cantoneiras_com_escova[1])
+    cantoneiras_com_escova = formula_cantoneira_com_escova(dados['giratorios'], dados['quantidade_vidros'], dados['altura_vidros'])
+    escovinha_5x8 = formula_escovinha_5x8(cantoneiras_com_escova['PE-3'][0], cantoneiras_com_escova['PE-3'][1])
 
     lista_tubo_aparador = formula_tubo_aparador(dados['aberturas'])
     lista_leitos = formula_leito([int(medida) for medida in dados['medidas_leitos']])

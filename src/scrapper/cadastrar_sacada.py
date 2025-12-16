@@ -19,9 +19,9 @@ def cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo, vidros, a
     escrever(navegador, By.ID, 'medida3', len(dados_sacada['aberturas']))
     escrever(navegador, By.ID, 'medida4', dados_sacada['quantidade_vidros'])
 
-    if lista_perfis_rolo['quantidade_comprimento_pe3'] == 2:
+    if lista_perfis_rolo['PE-3'][0] == 2:
         possibilidade_pe3 = '1336'
-    elif lista_perfis_rolo['quantidade_comprimento_pe3'] == 3:
+    elif lista_perfis_rolo['PE-3'][0] == 3:
         possibilidade_pe3 = '1337'
     else:
         possibilidade_pe3 = '1362'
@@ -35,6 +35,7 @@ def cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo, vidros, a
             select_element = Select(combo)
             select_element.select_by_value(valor)
         except Exception as e:
+            e.print(f'Erro ao selecionar valor no combo: {e}')
             log_spev(f'Erro: {e} não rastreado - {traceback.format_exc()}')
 
     clicar(navegador, By.ID, 'btnCadastrar')
@@ -109,7 +110,7 @@ def adicionar_itens_perfis(navegador, lista_itens: dict):
         escrever(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id', key)
         escrever(navegador, By.ID, f'P{contador}qtd', quantidade)
         escrever(navegador, By.ID, f'P{contador}tam', tamanho)
-    
+
     itens = navegador.find_elements(By.CSS_SELECTOR, f'#tabela_P > tbody > tr')
     itens.pop(0)
     itens.pop(-1)

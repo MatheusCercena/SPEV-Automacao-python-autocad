@@ -136,7 +136,6 @@ def projetar(dados, codigo_projeto):
 
         # Pivos
         pivos = definir_pivos(quant_vidros, sentidos_abert, juncoes, medidas_perfis_U, pontos_vidros)
-        print(f'Pivos: {pivos}')
 
         # Bocas
         medidas_bocas, quant_vidro_por_boca, pivos_individuais = definir_aberturas(sentidos_abert, vidros, pontos_vidros, pivos, quant_vidros, lcs)
