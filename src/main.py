@@ -17,7 +17,6 @@ from src.logs import log_spev
 from src.paredes import fazer_parede_esq, fazer_parede_dir, fillet_paredes
 from src.perfis import calcular_lista_perfis_rolo
 from src.perfis_U import offset_perfis_U, fillet_perfis_U, definir_coord_perfis_U, redefinir_coord_perfis_U
-from src.perfis_extras import calcular_quantidade_pe3
 from src.pivos import definir_pivos
 from src.recebimento_da_medicao import pedir_linhas_de_centro, pedir_quant_vidros, pedir_angSecoes, pedir_angParedes, pedir_prumos, definir_juncoes, solicitar_sentido_abertura, pedir_elevador, pedir_alturas, pedir_niveis, converter_juncoes_valor
 from src.sucata import necessidade_de_sucata, definir_diferencas
@@ -29,48 +28,12 @@ from PyQt6.QtWidgets import QMessageBox
 
 
 def projetar(dados, codigo_projeto):
-# if __name__ == "__main__":
     try:
         id = codigo_projeto
         log_spev(f'Inicio da execução ID: {id}')
 
         limpar_tudo()
 
-        # EXEMPLO 1
-        # lcs = [590, 2505]
-        # alturas = [[1137, 1138], [1138, 1141]]
-        # niveis = [[5, 0], [0, -5]]
-        # quant_vidros = [2, 5]
-        # angs_in = [-90]
-        # sentidos_abert = [[1, 12, 1, 2, 'esquerda']]
-        # juncoes = [[0, 2], [1, 0]]
-
-        # # EXEMPLO 2
-        # ordem_servico = '1508/25-1'
-        # lcs = [1000, 3000]
-        # alturas = [[1000], [1000]]
-        # niveis = [[0], [0]]
-        # quant_vidros = [3, 6]
-        # angs_in = [-90.0]
-        # sentidos_abert = [[1, 3, 1, 2, 'esquerda'], [4, 9, 9, 8, 'direita']]
-        # juncoes = [[0, 2], [1, 0]]
-        # angs_paredes = [0.0, 0.0]
-        # prumos = [0, 0]
-        # elevador = 2600
-
-        # INSERCAO MANUAL DOS DADOS
-        # lcs = pedir_linhas_de_centro()
-        # alturas = pedir_alturas(lcs)
-        # niveis = pedir_niveis(alturas)
-        # quant_vidros = pedir_quant_vidros(lcs)
-        # sentidos_abert, fixos = solicitar_sentido_abertura(quant_vidros)
-        # angs_in = pedir_angSecoes(lcs)
-        # angs_paredes = pedir_angParedes()
-        # prumos = pedir_prumos()
-        # juncoes = definir_juncoes(lcs, angs_in)
-        # elevador = pedir_elevador()
-
-        # PEGA DADOS DA INTERFACE
         ordem_servico = dados['ordem_servico']
         lcs = dados['linhas_centro']
         alturas = dados['alturas']
@@ -82,18 +45,6 @@ def projetar(dados, codigo_projeto):
         prumos = dados['prumos']
         juncoes = converter_juncoes_valor(dados['juncoes'])
         elevador = dados['elevador']
-
-        # print(f'OS: {ordem_servico}')
-        # print(f'LCS: {lcs}')
-        # print(f'Alturas: {alturas}')
-        # print(f'Níveis: {niveis}')
-        # print(f'Quantidade de Vidros: {quant_vidros}')
-        # print(f'Sentidos de Abertura: {sentidos_abert}')
-        # print(f'Ângulos Internos: {angs_in}')
-        # print(f'Ângulos de Paredes: {angs_paredes}')
-        # print(f'Prumos: {prumos}')
-        # print(f'Junções: {juncoes}')
-        # print(f'Elevador: {elevador}')
 
         giratorios = [sentido[2] for sentido in sentidos_abert]
         adjacentes = [sentido[3] for sentido in sentidos_abert]
@@ -108,6 +59,7 @@ def projetar(dados, codigo_projeto):
         sec_princ = descobrir_secao_principal(pos_lcs)
         pos_lcs, handles_lcs = redesenhar_linhas_de_centro(lcs, angs_in, sec_princ)
         coord_lcs = definir_coord_lcs(pos_lcs)
+
         # Início perfis U
         handles_perfis_U = offset_perfis_U(handles_lcs)
         fillet_perfis_U(handles_perfis_U)
@@ -175,7 +127,6 @@ def projetar(dados, codigo_projeto):
         folga_vidro = folga_altura_vidro(dif_superior, dif_inferior)
         altura_vidro = altura_vao - folga_vidro
         altura_painel = altura_vidro + 33
-        altura_pe3 = altura_painel + 98
 
         # Definir sucata
         sucata_pedacos_inferior, sucata_inteira_inferior = necessidade_de_sucata(dif_niveis, lcs, 'nivel', nivel_base)
@@ -183,24 +134,13 @@ def projetar(dados, codigo_projeto):
         sucata_pedacos = sucata_pedacos_inferior + sucata_pedacos_superior
         sucata_inteira = sucata_inteira_inferior + sucata_inteira_superior
 
-        # print(f'{' - '*10}SUCATA{' - '*10}')
-        # if sucata_pedacos > 0:
-        #     print(f'A quantidade de sucata em pedaços necessária é {sucata_pedacos}, sendo {sucata_pedacos_inferior} para a parte inferior e {sucata_pedacos_superior} para a parte superior.')
-        # else:
-        #     print('Não é necessário sucata em pedaços.')
-        # if sucata_inteira > 0:
-        #     print(f'A quantidade de sucata inteira necessária é {sucata_inteira}, sendo {sucata_inteira_inferior} para a parte inferior e {sucata_inteira_superior} para a parte superior.')
-        # else:
-        #     print('Não é necessário sucata inteira.')
         # Pivos
         pivos = definir_pivos(quant_vidros, sentidos_abert, juncoes, medidas_perfis_U, pontos_vidros)
         print(f'Pivos: {pivos}')
 
         # Bocas
         medidas_bocas, quant_vidro_por_boca, pivos_individuais = definir_aberturas(sentidos_abert, vidros, pontos_vidros, pivos, quant_vidros, lcs)
-
         desenhar_pivos_individuais(pivos_individuais, pos_lcs, quant_vidros, sentidos_abert)
-
         desenhar_bocas(medidas_bocas, quant_vidro_por_boca, pos_lcs, quant_vidros, sentidos_abert)
 
         # Informacoes
@@ -208,30 +148,21 @@ def projetar(dados, codigo_projeto):
         posicionar_pivos(pos_lcs, sec_princ, pivos, giratorios)
         posicionar_angulos(coord_lcs, angs_in)
 
-        # Perfis_extras
-        quantidade_pe3 = calcular_quantidade_pe3(giratorios, quant_vidros)
-
         # Lista de ferragens e perfis_rolo
         dados_ferragens_perfis_rolo = {
-            'juncoes': juncoes,
             'aberturas': sentidos_abert,
             'medidas_bocas': medidas_bocas,
             'giratorios': giratorios,
             'quantidade_vidros': quant_vidros,
             'medidas_perfis_U': medidas_perfis_U,
-            'comprimento_pe3': altura_pe3,
-            'quantidade_pe3' : quantidade_pe3,
             'vidros': vidros,
             'altura_vidros': altura_vidro,
             'medidas_leitos': medidas_leitos,
-            'altura_pe3': altura_pe3
+            'angulos_internos' : angs_in
         }
 
         lista_ferragens = calcular_lista_ferragens(dados_ferragens_perfis_rolo)
         lista_perfis_rolo = calcular_lista_perfis_rolo(dados_ferragens_perfis_rolo, prumos)
-
-        # print(f'Lista de ferragens: {lista_ferragens}')
-        # print(f'Listagem de perfis: {lista_perfis_rolo}')
 
         dados_sacada = {
             'ordem_servico': ordem_servico,
@@ -240,9 +171,7 @@ def projetar(dados, codigo_projeto):
             'altura_vao': altura_vao,
             'altura_vidro': altura_vidro,
             'altura_painel': altura_painel,
-            'altura_pe3': altura_pe3,
             'quantidade_vidros': sum(quant_vidros),
-            'quantidade_pe3': quantidade_pe3,
             'sucata_pedacos': sucata_pedacos,
             'sucata_inteira': sucata_inteira,
         }
@@ -256,4 +185,3 @@ def projetar(dados, codigo_projeto):
         log_spev(f'Erro: {e} não rastreado - {traceback.format_exc()}')
         log_spev(f'Fim da execução ID: {id}')
         QMessageBox.critical(None, "Erro", "Ocorreu um erro. Feche esta janela para continuar.")
-

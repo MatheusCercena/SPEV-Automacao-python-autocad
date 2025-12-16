@@ -1,5 +1,0 @@
-criar blocos: acad.doc.Blocks.Add(APoint(0, 0), "MeuBloco")
-adicionar linha no bloco: line = block.AddLine(APoint(0, 0), APoint(50, 50))
-
-inserir bloco: acad.model.InsertBlock(APoint(0, 0), "MeuBloco", 1, 1, 1, 0) #Insere o bloco "MeuBloco" na posição (0,0), escala 1:1, rotação 0°.
-

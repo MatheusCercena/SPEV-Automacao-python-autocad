@@ -1,4 +1,5 @@
 import os, sys
+import traceback
 from datetime import datetime
 import random
 import string
@@ -34,4 +35,4 @@ def log_spev(mensagem: str, nome_arquivo="spev.log"):
             f.write(texto_log)
 
     except Exception as e:
-        print(f"[ERRO] Não foi possível gravar no log: {e}")
+        print(f"[ERRO] Não foi possível gravar no log: {e} {traceback.format_exc()}")

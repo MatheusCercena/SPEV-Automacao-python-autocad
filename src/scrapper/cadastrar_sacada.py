@@ -1,3 +1,6 @@
+import traceback
+
+from src.logs import log_spev
 from src.scrapper.acoes import *
 from src.scrapper.config import usuario_ecg, senha_ecg
 from src.scrapper.pipeline_scrapper import *
@@ -16,14 +19,24 @@ def cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo, vidros, a
     escrever(navegador, By.ID, 'medida3', len(dados_sacada['aberturas']))
     escrever(navegador, By.ID, 'medida4', dados_sacada['quantidade_vidros'])
 
-    if dados_sacada['quantidade_pe3'] == 2:
+    if lista_perfis_rolo['quantidade_comprimento_pe3'] == 2:
         possibilidade_pe3 = '1336'
-    elif dados_sacada['quantidade_pe3'] == 3:
+    elif lista_perfis_rolo['quantidade_comprimento_pe3'] == 3:
         possibilidade_pe3 = '1337'
     else:
         possibilidade_pe3 = '1362'
 
-    selecionar_combo_box(navegador, By.NAME, 'select_possibilidade_opcao[]', possibilidade_pe3)
+    valores_para_selecionar = [possibilidade_pe3, 1287, 1295, 1300, 1303, 1306, 1532]
+    combos = navegador.find_elements(By.NAME, 'select_possibilidade_opcao[]')
+
+    for i, combo in enumerate(combos):
+        try:
+            valor = str(valores_para_selecionar[i])
+            select_element = Select(combo)
+            select_element.select_by_value(valor)
+        except Exception as e:
+            log_spev(f'Erro: {e} não rastreado - {traceback.format_exc()}')
+
     clicar(navegador, By.ID, 'btnCadastrar')
 
     url_parcial = 'https://ecgglass.com/ecg_glass/projetos/admProjetos/gera_proj.php?tipo'
@@ -62,12 +75,15 @@ def adicionar_itens_ferragens(navegador, lista_itens):
         'MOLDURA': lista_itens['quant_molduras'],
         'GIRATÓRIO': lista_itens['quant_giratorio'],
         'MOLADOTRILHO': lista_itens['quant_molas'],
-        'KITPAINEL': lista_itens['quant_kit_painel_producao'],
+        'KITPAINEL': lista_itens['quant_kit_painel_producao'] + lista_itens['quant_kit_painel_instalacao'],
         'ADESIVOMOLA': lista_itens['quantidade_adesivos_cor'],
         'ETIQUETAVERSATEEL': lista_itens['quantidade_adesivos_versateel'],
         'ESTACIONAMENTO': lista_itens['quant_estacionamento'],
         'ETIQUETAKAIZEN': lista_itens['quantidade_adesivos_kaizen'],
+        'TAMPALEITO45ºESQ' : lista_itens['tampa_leito_45_esq'],
+        'TAMPALEITO45ºDIR' : lista_itens['tampa_leito_45_dir']
     }
+
     contador_max = len(itens)+1
     contador = 1
     for key, value in nomes_ferragens_ecg.items():
@@ -83,6 +99,17 @@ def adicionar_itens_ferragens(navegador, lista_itens):
             break
 
 def adicionar_itens_perfis(navegador, lista_itens: dict):
+    def adicionar_linha(contador, quantidade, tamanho):
+        if contador < contador_max:
+            clicar(navegador, By.CSS_SELECTOR, f'#td_P_{contador} > img:nth-child(1)')
+        clicar(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
+        limpar_campo(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
+        clicar(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
+        limpar_campo_backspace(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
+        escrever(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id', key)
+        escrever(navegador, By.ID, f'P{contador}qtd', quantidade)
+        escrever(navegador, By.ID, f'P{contador}tam', tamanho)
+    
     itens = navegador.find_elements(By.CSS_SELECTOR, f'#tabela_P > tbody > tr')
     itens.pop(0)
     itens.pop(-1)
@@ -91,27 +118,15 @@ def adicionar_itens_perfis(navegador, lista_itens: dict):
     contador = 1
     for key, value in lista_itens.items():
         if type(value[0]) == list:
-            for lista in value:
-                if contador < contador_max:
-                    clicar(navegador, By.CSS_SELECTOR, f'#td_P_{contador} > img:nth-child(1)')
-                clicar(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
-                limpar_campo(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
-                clicar(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
-                limpar_campo_backspace(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
-                escrever(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id', key)
-                escrever(navegador, By.ID, f'P{contador}qtd', lista[0])
-                escrever(navegador, By.ID, f'P{contador}tam', lista[1])
+            for item in value:
+                quantidade = item[0]
+                tamanho = item[1]
+                adicionar_linha(contador, quantidade, tamanho)
                 contador += 1
         else:
-            if contador < contador_max:
-                clicar(navegador, By.CSS_SELECTOR, f'#td_P_{contador} > img:nth-child(1)')
-            clicar(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
-            limpar_campo(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
-            clicar(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
-            limpar_campo_backspace(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id')
-            escrever(navegador, By.CSS_SELECTOR, f'.custom-input-P{contador}id', key)
-            escrever(navegador, By.ID, f'P{contador}qtd', value[0])
-            escrever(navegador, By.ID, f'P{contador}tam', value[1])
+            quantidade = value[0]
+            tamanho = value[1]
+            adicionar_linha(contador, quantidade, tamanho)
             contador += 1
 
 def adicionar_vidros(navegador, lista_vidros, altura):
