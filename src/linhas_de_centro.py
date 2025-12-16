@@ -11,7 +11,6 @@ from pyautocad import Autocad, APoint
 from math import radians
 from src.autocad_conn import get_acad
 
-
 def definir_linhas_de_centro(lcs: list[int], angs_in: list[float]) -> list[list[float, float, float, float]]:
     """Define as posições das linhas de centro no plano cartesiano.
 
