@@ -1,12 +1,6 @@
 def distribuir_vidros_por_lado(quant_vidros: list[int]) -> list[list[int]]:
     """Distribui os vidros por lado da sacada.
-    
-    Args:
-        quant_vidros: Lista com a quantidade de vidros por lado.
 
-    Returns:
-        list: Lista de sublistas com números sequenciais dos vidros de cada lado.
-        
     Example:
         Entrada: [3, 5, 2]
         Saída: [[1, 2, 3], [4, 5, 6, 7, 8], [9, 10]]
@@ -22,15 +16,7 @@ def distribuir_vidros_por_lado(quant_vidros: list[int]) -> list[list[int]]:
     return todos_vidros
 
 def associar_aberturas_aos_lados(quant_vidros: list[int], aberturas: list) -> list:
-    """Associa as aberturas aos lados da sacada.
-    
-    Args:
-        quant_vidros: Lista com quantidade de vidros por lado.
-        aberturas: Lista com valores de cada abertura conforme função "solicitar sentido de abertura".
-    
-    Returns:
-        list: Lista com os sentidos de abertura associados aos lados.
-    """
+
     todos_vidros = distribuir_vidros_por_lado(quant_vidros)
     resultado = []
 

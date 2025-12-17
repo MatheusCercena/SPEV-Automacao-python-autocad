@@ -3,11 +3,7 @@ from src.comandos_cad import adicionar_mtext_modelspace, adicionar_texto_modelsp
 from pyautocad import APoint, Autocad
 from src.logs import log_spev
 
-
 def posicionar_pivos(pos_lcs, sec_princ, pivos: list[int], giratorios: list[int]):
-    """
-    Posiciona os pivos no CAD.
-    """
     ponto_ini = (pos_lcs[sec_princ][0], pos_lcs[sec_princ][1])
     ponto_fim = (pos_lcs[sec_princ][2], pos_lcs[sec_princ][3])
     ponto_base = ponto_medio(ponto_ini, ponto_fim)

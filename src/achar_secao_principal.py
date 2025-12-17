@@ -58,15 +58,7 @@ def def_eq_reta(secao: list) -> Eq:
     return Eq(y, valor_m*x + valor_b)
 
 def verificar_se_intercepta(secao: list, interseccao: dict) -> bool:
-    """Verifica se uma seção intercepta a linha guia.
-
-    Args:
-        secao: Lista com as coordenadas da seção [x1, y1, x2, y2].
-        interseccao: Dicionário com chaves x e y da interseção.
-
-    Returns:
-        bool: True se a seção intercepta a guia, False caso contrário.
-    """
+    """Verifica se uma seção intercepta a linha guia."""
 
     intervalo_x = sorted([secao[0], secao[2]])
     intervalo_y = sorted([secao[1], secao[3]])
@@ -80,17 +72,6 @@ def verificar_se_intercepta(secao: list, interseccao: dict) -> bool:
         return False
 
 def descobrir_secao_principal(pos_lcs: list) -> int:
-    """Descobre a linha de centro principal.
-
-    Descobre a linha de centro principal dentro de uma lista de linhas de centro (pos_lcs).
-
-    Args:
-        pos_lcs: Lista com as posições das linhas de centro.
-
-    Returns:
-        int: Índice da seção principal.
-    """
-    # Se houver apenas uma seção, retorna 0 automaticamente
     if len(pos_lcs) == 1:
         return 0
     else:

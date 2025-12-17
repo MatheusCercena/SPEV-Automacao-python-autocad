@@ -143,6 +143,4 @@ def calcular_lista_perfis_rolo(dados: dict, prumos: list[int, int]) -> list[dict
             for k, v in perfil_dict.items():
                 lista_perfis_final.setdefault(k, []).append(v)
 
-    # print(lista_perfis_final)
-    #falta pe-3
     return lista_perfis_final

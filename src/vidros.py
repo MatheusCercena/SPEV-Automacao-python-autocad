@@ -133,13 +133,6 @@ def pontos_dos_vidros(medidas_vidros: list[int], folgas: list[list[int, int]]) -
     return todos_pontos
 
 def offset_vidros(espessura_vidro: int) -> tuple[list[str], list[tuple[float, float, float]]]:
-    """Cria offsets dos vidros externos e internos.
-
-    Returns:
-        tuple:
-            - Lista de handles dos vidros
-            - Lista com coordenadas dos vidros
-    """
     acad, acad_ModelSpace = get_acad()
     acad2 = Autocad(create_if_not_exists=True)
 

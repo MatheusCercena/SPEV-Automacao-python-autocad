@@ -5,7 +5,7 @@ from src.achar_secao_principal import descobrir_secao_principal
 from src.bocas import definir_aberturas, desenhar_bocas, desenhar_pivos_individuais
 from src.calcs_vetor import menor_valor, maior_valor
 from src.cant_ajustes_angulo import necessidade_cant_ajuste, infos_cant_ajuste
-from src.comandos_cad import carregar_comandos, remover_guias, adicionar_texto_modelspace
+from src.comandos_cad import carregar_comandos, remover_guias, adicionar_texto_modelspace, garantir_layer_ativa
 from src.cotas import cotar_medida_total
 from src.drenos import definir_coord_drenos
 from src.ferragens import calcular_lista_ferragens
@@ -32,6 +32,7 @@ def projetar(dados, codigo_projeto):
         log_spev(f'Inicio da execução ID: {id}')
 
         limpar_tudo()
+        garantir_layer_ativa()
 
         ordem_servico = dados['ordem_servico']
         lcs = dados['linhas_centro']

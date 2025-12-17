@@ -6,7 +6,6 @@ import pythoncom
 from time import sleep
 from src.logs import log_spev
 
-
 def offset_perfis_U(handles_lcs: list) -> dict[str, list[str]]:
     offset_ext = 20
     offset_int = 32

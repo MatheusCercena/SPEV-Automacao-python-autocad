@@ -4,16 +4,6 @@ from src.calcs_cad import obter_pontos_medida_total
 
 
 def cotar_medida_total(perfis: list, tipo_cota: str = 'ISO-25', offset: int = 200) -> None:
-    """Cria cotas de medida total para os perfis no AutoCAD.
-
-    Args:
-        perfis: Lista com os perfis a serem cotados.
-        tipo_cota: Tipo de cota a ser utilizada. Padrão: 'ISO-25'.
-        offset: Distância de offset da cota. Padrão: 200.
-
-    Returns:
-        None: Função cria cotas no AutoCAD sem retorno.
-    """
     autocad = Autocad(create_if_not_exists=True)
 
     for perfil in perfis:

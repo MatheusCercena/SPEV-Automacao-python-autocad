@@ -3,17 +3,8 @@ from time import sleep
 from src.autocad_conn import get_acad
 from pyautocad import Autocad, APoint
 
-
-
 def carregar_comandos() -> None:
-    """Carrega comandos customizados no AutoCAD.
 
-    Carrega comandos customizados no AutoCAD. Usar preferivelmente no começo do código,
-    para evitar erros de difícil identificação.
-
-    Returns:
-        None: Função carrega comandos no AutoCAD sem retorno.
-    """
     lisp_code = f'''
 (defun c:custom_fillet ( h1 h2 / linha1 linha2)
     (setq linha1 (handent h1))
@@ -79,3 +70,18 @@ def adicionar_mtext_modelspace(texto, posicao: tuple[float, float, float], altur
     texto = model_space.AddMText(posicao, largura, texto)
     texto.Height = altura
     return texto
+
+def garantir_layer_ativa():
+    acad = Autocad()
+    layer_padrao = '0'
+
+    try:
+        layers = acad.doc.Layers
+        
+        target_layer = layers.Item(layer_padrao)
+        
+        acad.doc.ActiveLayer = target_layer
+                
+    except Exception as e:
+        print(f"Erro: Não foi possível definir a layer. Verifique se o nome '{layer_padrao}' existe.")
+        print(f"Detalhes: {e}")

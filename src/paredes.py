@@ -1,11 +1,3 @@
-"""
-Módulo para desenho e manipulação de paredes no AutoCAD.
-
-Inclui funções para desenhar paredes laterais, aplicar fillets e integrar paredes aos perfis U do projeto.
-"""
-"""
-Desenha as paredes, através de offsets chamados via COM e fillets por lisp.
-"""
 import pythoncom
 from pyautocad import Autocad, APoint
 from src.autocad_conn import get_acad
@@ -13,11 +5,6 @@ from math import radians
 from time import sleep
 
 def fazer_parede_esq(lcs: list[float], perfil_U_ext: str, perfil_U_int: str, angulo: float) -> str:
-    """Desenha a parede esquerda sem dar fillet com os perfis U.
-
-    Returns:
-        str: Handle da parede esquerda criada.
-    """
     acad, acad_ModelSpace = get_acad()
     acad2 = Autocad(create_if_not_exists=True)
     for _ in range(5):
@@ -34,11 +21,6 @@ def fazer_parede_esq(lcs: list[float], perfil_U_ext: str, perfil_U_int: str, ang
     return linha.Handle
 
 def fazer_parede_dir(handles_lcs: list[float], perfil_U_ext: str, perfil_U_int: str, angulo: float) -> str:
-    """Desenha a parede direita sem dar fillet com os perfis U.
-
-    Returns:
-        str: Handle da parede direita criada.
-    """
     acad, acad_ModelSpace = get_acad()
     acad2 = Autocad(create_if_not_exists=True)
 
@@ -56,16 +38,6 @@ def fazer_parede_dir(handles_lcs: list[float], perfil_U_ext: str, perfil_U_int: 
     return linha.Handle
 
 def fillet_paredes(handle_perfil_U_ext: str, handle_perfil_U_int: str, handle_parede: str) -> None:
-    """Aplica fillets nos perfis U com a parede.
-
-    Args:
-        handle_perfil_U_ext: Handle do perfil U externo.
-        handle_perfil_U_int: Handle do perfil U interno.
-        handle_parede: Handle da parede.
-
-    Returns:
-        None: Função executa comandos no AutoCAD sem retorno.
-    """
     acad, acad_ModelSpace = get_acad()
     acad2 = Autocad(create_if_not_exists=True)
 

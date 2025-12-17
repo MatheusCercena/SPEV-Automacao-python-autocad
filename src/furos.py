@@ -6,21 +6,6 @@ from src.perfis_U import distribuir_perfis_U_por_lado
 
 
 def definir_pontos_furos(coord_vidros: list[list[tuple[float, float, float]]], folgas_vidros: list[list[int, int]], quant_vidros: list[list[int]], angs_in: list[float], angs_paredes: list[float], espessura_v: int) -> list[list[tuple[float, float, float]]]:
-    """Define os pontos para furação dos perfis U.
-
-    Args:
-        coord_vidros: Lista contendo as coordenadas dos vidros por lado.
-        folgas_vidros: Lista contendo as folgas dos vidros por lado.
-        quant_vidros: Lista contendo a quantidade de vidros por lado.
-        angs_in: Lista contendo os ângulos internos.
-        angs_paredes: Lista contendo os ângulos das paredes.
-        espessura_v: Espessura do vidro em milímetros.
-
-    Returns:
-        list: Lista de listas contendo as coordenadas dos pontos de furação por lado.
-    """
-    acad, acad_ModelSpace = get_acad()
-
     folga_parede = -12
     folga_passante = 2
     folga_colante = -3-espessura_v/2
@@ -155,18 +140,6 @@ def redefinir_pontos_furos(coord_furos: list[list[tuple[float, float, float]]], 
     return coordenadas_redefinidas
 
 def distribuir_furos_por_lado(coord_furos: list[tuple[float, float, float]], quant_furos_por_lado: list[list[tuple[float, float, float]]]) -> list[list[tuple[float, float, float]]]:
-    """Distribui os vidros por lado da sacada.
-
-    Args:
-        quant_vidros: Lista com a quantidade de vidros por lado.
-
-    Returns:
-        list: Lista de sublistas com números sequenciais dos vidros de cada lado.
-
-    Example:
-        Entrada: [3, 5, 2]
-        Saída: [[1, 2, 3], [4, 5, 6, 7, 8], [9, 10]]
-    """
     coordenadas = []
     cont = 0
     for qtd in quant_furos_por_lado:
@@ -174,4 +147,3 @@ def distribuir_furos_por_lado(coord_furos: list[tuple[float, float, float]], qua
         coordenadas.append(coord_lado)
         cont += qtd
     return coordenadas
-

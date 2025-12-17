@@ -4,19 +4,17 @@ from src.comandos_cad import adicionar_texto_modelspace
 from src.logs import log_spev
 
 def verificar_se_boca_bate_na_mola(molas, boca, sentido):
-    distancia_boca = 0
+    distancia_boca = boca
     for mola in molas:
         if mola-34 <= boca <= mola +34:#boca está batendo na mola
             if sentido == 'esquerda':
-                distancia_boca = mola + 45
-            else:
                 distancia_boca = mola - 45
-        else:
-            distancia_boca = boca
+            else:
+                distancia_boca = mola + 45
     return distancia_boca
 
-def verificar_se_vidro_abre_na_boca(vidro, meio, sentido, boca, limite=0.6):
-    limite_vidro = meio + vidro*limite if sentido == 'esquerda' else meio - vidro*limite
+def verificar_se_vidro_abre_na_boca(vidro, pivo_individual, sentido, boca, limite=0.6):
+    limite_vidro = pivo_individual + vidro*limite -15 if sentido == 'esquerda' else pivo_individual - vidro*limite + 15
     if sentido == 'esquerda' and boca <= limite_vidro or sentido == 'direita' and boca >= limite_vidro:
         return False
     else:
@@ -42,7 +40,6 @@ def criar_nova_boca(meio_do_estacionamento, vidro, sentido):
 
 
 def definir_pivos_individuais(pivo, quant_vidros_da_abertura, direcao):
-    # Definindo o meio dos vidros
     pivos_individuais = []
     pivos_individuais.append(pivo)
     contador = 1
@@ -66,6 +63,8 @@ def definir_bocas(final_do_giratorio, direcao, medida_vidros_da_abertura, pivos_
     boca1_final = verificar_se_boca_bate_na_mola(molas, boca1, direcao)
     bocas_lado.append(boca1_final)
     quant_lado.append(0)
+
+    medida_vidros_da_abertura = reversed(medida_vidros_da_abertura) if direcao == 'direita' else medida_vidros_da_abertura
 
     # Definindo as outras bocas
     for i, vidro in enumerate(medida_vidros_da_abertura):
@@ -94,7 +93,6 @@ def definir_aberturas(
     quant_vidro_por_boca = []
     pivos_individuais_sacada = []
     for i, sentido in enumerate(sentidos):
-        # inicio conversao de dados
         vidro_ini = sentido[0]
         vidro_fim = sentido[1]
         direcao = sentido[4]
@@ -106,7 +104,6 @@ def definir_aberturas(
         giratorio = 0 if direcao == 'esquerda' else quant_vidros_da_abertura-1
         lcs_giratorio = localizar_giratorio(quant_vidros, sentido[2])
         final_do_giratorio = posicao_vidros_da_abertura[giratorio][1] if direcao == 'esquerda' else posicao_vidros_da_abertura[giratorio][0] - lcs[lcs_giratorio]
-        # fim conversao de dados
 
         pivos_individuais = definir_pivos_individuais(pivo, quant_vidros_da_abertura, direcao)
         pivos_individuais_sacada.append(pivos_individuais)
@@ -180,11 +177,12 @@ def desenhar_bocas(
                     ponto_ref_medida = definir_pontos_na_secao(ponto_ref_medida, vetor_unitario_guia, 30)
                     ponto_ref_quantidade = definir_pontos_na_secao(ponto_ref_medida, vetor_unitario_guia, deslocamento_perpendicular*2)
                 else:
-                    p3 = definir_pontos_na_secao(ponto_guia, vetor_unitario, -deslocamento_paralelo_guia*5*j)
-                    ponto_l_meio = definir_pontos_na_secao(ponto_l_meio, vetor_unitario, -deslocamento_paralelo_guia*5*j)
-                    ponto_l_fim = definir_pontos_na_secao(ponto_l_fim, vetor_unitario, -deslocamento_paralelo_guia*5*j)
-                    ponto_ref_medida = definir_pontos_na_secao(ponto_ref_medida, vetor_unitario, deslocamento_paralelo*j*-5 if direcao == 'esquerda' else deslocamento_paralelo*j*-5)
-                    ponto_ref_quantidade = definir_pontos_na_secao(ponto_ref_quantidade, vetor_unitario, deslocamento_paralelo*j*-5 if direcao == 'esquerda' else deslocamento_paralelo*j*-5)
+                    p3 = definir_pontos_na_secao(ponto_guia, vetor_unitario, -deslocamento_paralelo_guia*(j*5))
+                    ponto_guia = p3
+                    ponto_l_meio = definir_pontos_na_secao(ponto_l_meio, vetor_unitario, -deslocamento_paralelo_guia*(j*5))
+                    ponto_l_fim = definir_pontos_na_secao(ponto_l_fim, vetor_unitario, -deslocamento_paralelo_guia*(j*5))
+                    ponto_ref_medida = definir_pontos_na_secao(ponto_ref_medida, vetor_unitario, deslocamento_paralelo*(j*-5) if direcao == 'esquerda' else deslocamento_paralelo*(j*-5))
+                    ponto_ref_quantidade = definir_pontos_na_secao(ponto_ref_quantidade, vetor_unitario, deslocamento_paralelo*(j*-5) if direcao == 'esquerda' else deslocamento_paralelo*(j*-5))
 
                 l1 = acad.model.AddLine(APoint(*p3), APoint(*ponto_l_meio))
                 l1.Layer = 'Bocas guias'

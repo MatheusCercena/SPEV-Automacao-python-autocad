@@ -8,21 +8,10 @@ from sympy import symbols, Eq, solve
 from time import sleep
 from src.logs import log_spev
 
-
 x, y, b = symbols('x y b')
 
 def desenhar_guias_leitos(handles_lcs: list, vidros_sacada: list, posicao_dos_vidros: list, folgas_leitos: list) -> list:
-    """Desenha as guias dos leitos no AutoCAD.
-
-    Args:
-        handles_lcs: Lista de handles das linhas de centro.
-        vidros_sacada: Lista com os vidros da sacada.
-        posicao_dos_vidros: Lista com as posições dos vidros.
-        folgas_leitos: Lista com as folgas dos leitos.
-
-    Returns:
-        list: Lista com handles das guias dos leitos.
-    """
+    """Desenha as guias dos leitos no AutoCAD."""
     acad, acad_ModelSpace = get_acad()
     acad2 = Autocad(create_if_not_exists=True)
 
