@@ -33,7 +33,7 @@ def escrever(navegador, tipo_seletor, seletor, key):
     objeto.send_keys(str(key))
 
 def pegar_texto(navegador, tipo_seletor, seletor):
-    espera_objeto = WebDriverWait(navegador, 3)
+    espera_objeto = WebDriverWait(navegador, 10)
     espera_objeto.until(EC.element_to_be_clickable((tipo_seletor, seletor)))
     objeto = navegador.find_element(tipo_seletor, seletor)
     return objeto.text

@@ -13,13 +13,6 @@ def criar_alfanumerico():
     return s
 
 def log_spev(mensagem: str, nome_arquivo="spev.log"):
-    """
-    Adiciona uma mensagem em um arquivo de log dentro da pasta do SPEV.
-    Cria o arquivo caso ele não exista.
-
-    :param mensagem: texto a ser adicionado no log
-    :param nome_arquivo: nome do arquivo de log (opcional)
-    """
     try:
         pasta_spev = os.path.dirname(sys.executable)
         caminho_log = os.path.join(pasta_spev, nome_arquivo)

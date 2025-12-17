@@ -26,7 +26,7 @@ def cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo, vidros, a
     else:
         possibilidade_pe3 = '1362'
 
-    valores_para_selecionar = [possibilidade_pe3, 1287, 1295, 1300, 1303, 1306, 1532]
+    valores_para_selecionar = [possibilidade_pe3, 1339, 1347, 1352, 1355, 1358, 1538]
     combos = navegador.find_elements(By.NAME, 'select_possibilidade_opcao[]')
 
     for i, combo in enumerate(combos):
@@ -35,7 +35,7 @@ def cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo, vidros, a
             select_element = Select(combo)
             select_element.select_by_value(valor)
         except Exception as e:
-            e.print(f'Erro ao selecionar valor no combo: {e}')
+            print(f'Erro ao selecionar valor no combo: {e}')
             log_spev(f'Erro: {e} não rastreado - {traceback.format_exc()}')
 
     clicar(navegador, By.ID, 'btnCadastrar')
@@ -44,6 +44,7 @@ def cadastrar_sacada(dados_sacada, lista_ferragens, lista_perfis_rolo, vidros, a
     while url_parcial not in navegador.current_url:
         sleep(1)
     WebDriverWait(navegador, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
+    escrever(navegador, By.ID, "text_local", "Sacada")
     apagar_itens_ferragens_ecg(navegador)
     apagar_itens_perfis_ecg(navegador)
     adicionar_vidros(navegador, vidros, altura_vidro)
@@ -88,7 +89,10 @@ def adicionar_itens_ferragens(navegador, lista_itens):
     contador_max = len(itens)+1
     contador = 1
     for key, value in nomes_ferragens_ecg.items():
-        clicar(navegador, By.CSS_SELECTOR, f'#td_F_{contador} > img:nth-child(1)')
+        if value == 0:
+            continue
+        if contador < contador_max:
+            clicar(navegador, By.CSS_SELECTOR, f'#td_F_{contador} > img:nth-child(1)')
         clicar(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id')
         limpar_campo(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id')
         clicar(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id')
@@ -96,8 +100,6 @@ def adicionar_itens_ferragens(navegador, lista_itens):
         escrever(navegador, By.CSS_SELECTOR, f'.custom-input-F{contador}id', key)
         escrever(navegador, By.ID, f'F{contador}qtd', value)
         contador += 1
-        if contador > contador_max:
-            break
 
 def adicionar_itens_perfis(navegador, lista_itens: dict):
     def adicionar_linha(contador, quantidade, tamanho):
@@ -122,13 +124,15 @@ def adicionar_itens_perfis(navegador, lista_itens: dict):
             for item in value:
                 quantidade = item[0]
                 tamanho = item[1]
-                adicionar_linha(contador, quantidade, tamanho)
-                contador += 1
+                if quantidade > 0:
+                    adicionar_linha(contador, quantidade, tamanho)
+                    contador += 1
         else:
             quantidade = value[0]
             tamanho = value[1]
-            adicionar_linha(contador, quantidade, tamanho)
-            contador += 1
+            if quantidade > 0:
+                adicionar_linha(contador, quantidade, tamanho)
+                contador += 1
 
 def adicionar_vidros(navegador, lista_vidros, altura):
     contador = 1

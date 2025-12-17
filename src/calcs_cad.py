@@ -1,63 +1,25 @@
 from math import sin, cos, tan, radians, atan2
 
 def calcular_gaps_paredes(ang: float) -> float:
-    """Calcula o gap entre a linha de centro e a parede.
-    
-    O gap é diferente de 0 no caso de paredes anguladas.
-    
-    Args:
-        ang: Ângulo da parede em graus.
-    
-    Returns:
-        float: Gap calculado entre a linha de centro e a parede.
-    """
+    """Calcula o gap entre a linha de centro e a parede. O gap é diferente de 0 no caso de paredes anguladas."""
     cat_adj = 18
     gap_lcs = round((tan(radians(abs(ang))) * cat_adj), 0)
     return gap_lcs
 
 def calcular_gaps_leito(ang: float) -> float:
-    """Calcula o gap entre os leitos e a linha de centro.
-    
-    Usado quando é junção do tipo vidro-vidro.
-    
-    Args:
-        ang: Ângulo da junção em graus.
-    
-    Returns:
-        float: Gap calculado entre os leitos e a linha de centro.
-    """
+    """Calcula o gap entre os leitos e a linha de centro. Usado quando é junção do tipo vidro-vidro."""
     cat_adj = 14
     gap_leito = round((tan(radians(abs(ang/2))) * cat_adj), 2)
     return gap_leito
 
 def calcular_gaps_vidro(ang: float, espessura_vidro: int) -> float:
-    """Calcula o gap entre o vidro e a linha de centro.
-    
-    Usado quando é junção do tipo vidro-vidro.
-    
-    Args:
-        ang: Ângulo da junção em graus.
-        espessura_vidro: Espessura do vidro em milímetros.
-    
-    Returns:
-        float: Gap calculado entre o vidro e a linha de centro.
-    """
+    """Calcula o gap entre o vidro e a linha de centro. Usado quando é junção do tipo vidro-vidro."""
     cat_adj = espessura_vidro/2
     gap_vidro = round((tan(radians(abs(ang/2))) * cat_adj), 2)
     return gap_vidro
 
 def calcular_gaps_furos(ang: float) -> float:
-    """Calcula o gap entre o vidro e a linha de centro.
-    
-    Usado quando é junção do tipo vidro-vidro.
-    
-    Args:
-        ang: Ângulo da junção em graus.
-        espessura_vidro: Espessura do vidro em milímetros.
-    
-    Returns:
-        float: Gap calculado entre o vidro e a linha de centro.
-    """
+    """Calcula o gap entre o vidro e a linha de centro. Usado quando é junção do tipo vidro-vidro."""
     cat_adj = 22
     gap_vidro = round((tan(radians(abs(ang/2))) * cat_adj), 2)
     return gap_vidro

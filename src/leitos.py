@@ -1,12 +1,3 @@
-"""
-Módulo para desenho e manipulação de leitos no AutoCAD.
-
-Inclui funções para desenhar guias, calcular folgas, converter estruturas e desenhar leitos completos com suas características geométricas.
-"""
-"""
-Desenha os leitos, através de offsets chamados via COM e fillets por lisp.
-"""
-
 import pythoncom
 from pyautocad import Autocad, APoint
 from src.autocad_conn import get_acad

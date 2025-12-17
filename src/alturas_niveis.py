@@ -1,13 +1,9 @@
-'''Módulo para definir e ajustar os níveis dos vidros de uma sacada, considerando a posição dos giratórios e as alturas dos trilhos.'''
 from src.calcs_vetor import maior_valor, menor_valor, interpolar_valor_em_x, ponto_medio, ponto_perpendicular_a_vetor
 from src.vidros import achar_posicao_vidro
 from src.comandos_cad import adicionar_texto_modelspace
 from pyautocad import APoint
 
 def definir_niveis(niveis: list[list[int]], lcs: list[int], quant_vidros: list[int], sentidos_abert: list[list[int, int, int, int, str]]):
-    '''
-    Ajusta os níveis da sacada conforme a posição dos giratórios.
-    '''
     # Ajustando niveis para padrao de base 0
     maior_nivel = maior_valor(niveis)
     niveis_base_0 = [[nivel - maior_nivel for nivel in lado] for lado in niveis]
@@ -103,18 +99,7 @@ def obter_altura_giratorios(
     fonte: list[list[int]],
     lcs: list[int]
 ) -> list[float]:
-    """
-    Obtém a altura (ou nível) do ponto do giratório interpolado na posição real do vidro.
 
-    Args:
-        aberturas: Lista de abertura com info do vidro giratório.
-        quant_vidros: Lista de quantos vidros por lado.
-        fonte: Lista de alturas ou níveis por lado.
-        lcs: Largura total de cada lado.
-
-    Returns:
-        Lista com alturas interpoladas dos giratórios.
-    """
     posicao = achar_posicao_vidro(quant_vidros)
     resultado = []
 

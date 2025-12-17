@@ -1,8 +1,3 @@
-"""
-Módulo responsável por definir pontos de furação nos perfis U com base nas medidas dos perfis e posições dos vidros.
-
-Este módulo interage com o AutoCAD para criar offsets nos perfis U conforme a necessidade do projeto.
-"""
 from src.autocad_conn import get_acad
 from src.calcs_vetor import linha_paralela_com_offset, deslocar_pontos_direcao, normalizar_coordenadas, esta_entre
 from src.aberturas import distribuir_vidros_por_lado

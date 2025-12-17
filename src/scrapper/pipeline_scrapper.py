@@ -5,12 +5,6 @@ from src.scrapper.scrapper_ecg import *
 from src.scrapper.config import senha_ecg, usuario_ecg
 
 def abrir_navegador():
-    # if headless == True:
-    #     options=Options()
-    #     options.add_argument('--headless')
-    #     options.add_argument('--width=1920')
-    #     options.add_argument('--height=1080')
-
     navegador = webdriver.Firefox(service=Service(), options=Options())
     navegador.maximize_window()
     return navegador

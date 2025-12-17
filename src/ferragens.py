@@ -54,7 +54,7 @@ def calcular_mangueira(giratorios):
 def calcular_tampas_leito_45(angs_in):
     quantidade = 0
     for ang in angs_in:
-        if 84 < abs(ang)/2 < 93:
+        if 84 < abs(ang) < 93 or 267 < abs(ang) < 276:
             quantidade += 2
     return quantidade
 

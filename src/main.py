@@ -26,7 +26,6 @@ from src.vidros import offset_vidros, medida_dos_vidros, definir_folgas_vidros, 
 import traceback
 from PyQt6.QtWidgets import QMessageBox
 
-
 def projetar(dados, codigo_projeto):
     try:
         id = codigo_projeto

@@ -1,12 +1,9 @@
-''' Funções para gerenciar bocas dos vidros, evitando molas e garantindo abertura correta. '''
-
 from src.calcs_vetor import obter_dados_intervalo, vetor_entre_pontos, normalizar, definir_pontos_na_secao, ponto_perpendicular_a_vetor, angulo_do_vetor
 from pyautocad import Autocad, APoint
 from src.comandos_cad import adicionar_texto_modelspace
 from src.logs import log_spev
 
 def verificar_se_boca_bate_na_mola(molas, boca, sentido):
-    ''' Verifica se a boca está batendo em alguma mola. '''
     distancia_boca = 0
     for mola in molas:
         if mola-34 <= boca <= mola +34:#boca está batendo na mola
@@ -19,7 +16,6 @@ def verificar_se_boca_bate_na_mola(molas, boca, sentido):
     return distancia_boca
 
 def verificar_se_vidro_abre_na_boca(vidro, meio, sentido, boca, limite=0.6):
-    ''' Verifica se o vidro abre na boca. '''
     limite_vidro = meio + vidro*limite if sentido == 'esquerda' else meio - vidro*limite
     if sentido == 'esquerda' and boca <= limite_vidro or sentido == 'direita' and boca >= limite_vidro:
         return False
@@ -27,7 +23,6 @@ def verificar_se_vidro_abre_na_boca(vidro, meio, sentido, boca, limite=0.6):
         return True
 
 def localizar_giratorio(quant_vidros, giratorio):
-    ''' Localiza o índice do vidro giratório para cada abertura.'''
     indice_vidro_giratorio = giratorio - 1  # convertendo pra índice 0-based
     soma = 0
     for i, qtd in enumerate(quant_vidros):
@@ -39,7 +34,6 @@ def localizar_giratorio(quant_vidros, giratorio):
     return resultado
 
 def criar_nova_boca(meio_do_estacionamento, vidro, sentido):
-    ''' Cria uma nova boca para o vidro caso a boca atual não esteja adequada. '''
     if sentido == 'esquerda':
         nova_boca = meio_do_estacionamento + (vidro - 15.0) - 15
     else:
@@ -48,7 +42,6 @@ def criar_nova_boca(meio_do_estacionamento, vidro, sentido):
 
 
 def definir_pivos_individuais(pivo, quant_vidros_da_abertura, direcao):
-    ''' Define o pivo individual dos vidros para calcular as bocas. '''
     # Definindo o meio dos vidros
     pivos_individuais = []
     pivos_individuais.append(pivo)
@@ -60,7 +53,6 @@ def definir_pivos_individuais(pivo, quant_vidros_da_abertura, direcao):
     return pivos_individuais
 
 def definir_molas(pivos_individuais, direcao):
-    ''' Define a posição e quantidade das molas.'''
     molas = []
     for vidro in pivos_individuais[:0:-3]:
         ponto_mola = vidro + 90 if direcao == 'esquerda' else vidro - 90
@@ -68,7 +60,6 @@ def definir_molas(pivos_individuais, direcao):
     return molas
 
 def definir_bocas(final_do_giratorio, direcao, medida_vidros_da_abertura, pivos_individuais, molas, limite=0.6) -> tuple[list[float], list[int]]:
-    ''' Define as medidas e quantidade de vidros por boca.'''
     bocas_lado = []
     quant_lado = []
     boca1 = final_do_giratorio - 30.0 if direcao == 'esquerda' else final_do_giratorio + 30.0
@@ -99,7 +90,6 @@ def definir_aberturas(
         quant_vidros: list[int],
         lcs
         ):
-    ''' Define as bocas para os sentidos de aberutra com base nos sentidos de abertura e medidas. '''
     medidas_bocas = []
     quant_vidro_por_boca = []
     pivos_individuais_sacada = []
@@ -146,7 +136,6 @@ def desenhar_bocas(
         quant_vidros: list[int],
         sentidos_abert: list[int, int, int, int, tuple[int]]
         ):
-    ''' Desenha as bocas com base nas medidas e quantidade de vidros por boca. '''
     acad = Autocad(create_if_not_exists=True)
 
     try:

@@ -1,31 +1,8 @@
-"""
-Módulo para definição e manipulação das linhas de centro no AutoCAD.
-
-Inclui funções para desenhar, redesenhar, ordenar e calcular coordenadas das linhas de centro, essenciais para o posicionamento dos elementos do projeto.
-"""
-"""
-Funções para definir as coordenadas das linhas de centro com base nos inputs de input_data e desenha-las na instância aberta de Autocad.
-"""
-
 from pyautocad import Autocad, APoint
 from math import radians
 from src.autocad_conn import get_acad
 
 def definir_linhas_de_centro(lcs: list[int], angs_in: list[float]) -> list[list[float, float, float, float]]:
-    """Define as posições das linhas de centro no plano cartesiano.
-
-    Define as posições iniciais e finais nos eixos x e y para cada uma das linhas de centro
-    entregues no parâmetro lcs.
-
-    Args:
-        lcs: Lista com as linhas de centro a serem definidas.
-        angs_in: Lista com ângulos internos entre cada linha de centro.
-                Note que angs_in[0] equivale ao ângulo entre lcs[0] e lcs[1].
-
-    Returns:
-        list: Lista com as posições definidas para cada linha de centro,
-              no formato [[xi1, yi1, xf1, yf1], [xi2, yi2, xf2, yf2], [xin, yin, xfn, yfn]].
-    """
     cad, acad_ModelSpace = get_acad()
     acad = Autocad(create_if_not_exists=True)
 
@@ -53,15 +30,6 @@ def definir_linhas_de_centro(lcs: list[int], angs_in: list[float]) -> list[list[
     return coord_de_linhas_de_centro
 
 def ordem_lcs(lcs: list, sec_princ: int) -> list[int]:
-    """Define a ordem de processamento das linhas de centro.
-
-    Args:
-        lcs: Lista com as linhas de centro.
-        sec_princ: Índice da seção principal.
-
-    Returns:
-        list: Lista com a ordem de processamento das linhas de centro.
-    """
     lista = []
     lista.append(sec_princ)
     if sec_princ < len(lcs)-1:
@@ -75,22 +43,7 @@ def ordem_lcs(lcs: list, sec_princ: int) -> list[int]:
     return lista
 
 def redesenhar_linhas_de_centro(lcs: list[int], angs_in: list[float], sec_princ: int) -> tuple[list[list[float]], list]:
-    """Redesenha as linhas de centro no AutoCAD a partir da seção principal.
-
-    Desenha as linhas de centro na instância de AutoCAD e retorna uma lista com as posições
-    iniciais e finais nos eixos x e y para cada uma das linhas de centro.
-
-    Args:
-        lcs: Lista com as linhas de centro a serem definidas.
-        angs_in: Lista com ângulos internos entre cada linha de centro.
-                Note que angs_in[0] equivale ao ângulo entre lcs[0] e lcs[1].
-        sec_princ: Índice da seção principal.
-
-    Returns:
-        tuple: Tupla contendo:
-            - Lista com as posições corrigidas para cada linha de centro
-            - Lista de handles das linhas de centro desenhadas
-    """
+    """Redesenha as linhas de centro no AutoCAD a partir da seção principal."""
     cad, acad_ModelSpace = get_acad()
     acad = Autocad(create_if_not_exists=True)
 
@@ -154,14 +107,7 @@ def redesenhar_linhas_de_centro(lcs: list[int], angs_in: list[float], sec_princ:
     return lista_de_LCs, lista
 
 def definir_coord_lcs(pos_lcs: list[list[float]]) -> list[tuple[float, float, float]]:
-    """Define as coordenadas 3D das linhas de centro.
-
-    Args:
-        pos_lcs: Lista com as posições 2D das linhas de centro.
-
-    Returns:
-        list: Lista com as coordenadas 3D das linhas de centro.
-    """
+    """Define as coordenadas 3D das linhas de centro."""
     coordenadas = []
     for lcs in pos_lcs:
         coord = []

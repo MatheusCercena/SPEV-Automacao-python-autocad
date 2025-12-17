@@ -1,8 +1,3 @@
-"""
-Módulo para criação de cotas de medida total no AutoCAD.
-
-Fornece função para cotar perfis desenhados, facilitando a documentação e conferência de projetos.
-"""
 from pyautocad import Autocad, APoint
 from src.calcs_vetor import ponto_medio, somar_pontos, multiplicar_vetor, vetor_perpendicular_unitario, angulo_do_vetor
 from src.calcs_cad import obter_pontos_medida_total

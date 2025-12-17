@@ -1,9 +1,3 @@
-"""
-Módulo para gerenciamento de aberturas em projetos de sacadas.
-
-Inclui funções para distribuir vidros por lado e associar aberturas aos lados da sacada.
-"""
-
 def distribuir_vidros_por_lado(quant_vidros: list[int]) -> list[list[int]]:
     """Distribui os vidros por lado da sacada.
     

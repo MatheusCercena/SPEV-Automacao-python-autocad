@@ -1,18 +1,8 @@
 """
-Módulo para coleta de dados de medição necessários para o desenho automatizado no AutoCAD.
-
-Inclui funções para solicitar ao usuário informações como linhas de centro, ângulos, quantidades de vidros, junções e aberturas, além de validações.
-"""
-"""
 Funções para pedir os dados principais das medições para serem usadas pelas funções de desenho.
 """
 
 def pedir_linhas_de_centro() -> list[int]:
-    """Solicita ao usuário as linhas de centro das seções.
-
-    Returns:
-        list: Lista com as linhas de centro das seções em milímetros.
-    """
     linhas_de_centro = []
 
     print(f'''
@@ -120,14 +110,6 @@ Como o nível está informado na medição?:
     return niveis_da_sacada
 
 def pedir_quant_vidros(lcs: list[int]) -> list[int]:
-    """Solicita ao usuário a quantidade de vidros por seção.
-
-    Args:
-        lcs: Lista com as linhas de centro das seções.
-
-    Returns:
-        list: Lista com a quantidade de vidros de cada lado.
-    """
     quant_vidros = []
     print(f'''
 {' - '*10}QUANTIDADE DE VIDROS{' - '*10}
@@ -212,11 +194,6 @@ Inserir o angulo medido no transferidor, sem conversão
     return angs_ex
 
 def pedir_prumos() -> list[float]:
-    """Solicita ao usuário os prumos das extremidades.
-
-    Returns:
-        list: Lista com os prumos no formato: [prumo_esq, prumo_dir].
-    """
     prumos = []
     print(f'''
 {' - '*10}PRUMOS{' - '*10}
@@ -290,21 +267,6 @@ def definir_juncoes(lcs: list[int], angs_in: list[float]) -> list[list[int]]:
     return juncoes
 
 def solicitar_sentido_abertura(quant_vidros: list[int]) -> tuple[list, list[int]]:
-    """Solicita ao usuário os sentidos de abertura dos vidros.
-
-    Args:
-        quant_vidros: Lista com a quantidade de vidros por seção.
-
-    Returns:
-        tuple: Tupla contendo:
-            - Lista de sublistas em que cada sublista representa uma abertura:
-                - item 0: onde a abertura começa
-                - item 1: onde termina a abertura
-                - item 2: qual vidro é o giratório
-                - item 3: qual vidro é o vidro adjacente ao giratório
-                - item 4: qual o sentido de abertura (direita ou esquerda)
-            - Lista contendo os vidros que são fixos
-    """
     sentidos = []
     moveis = []
     v_ini = ''

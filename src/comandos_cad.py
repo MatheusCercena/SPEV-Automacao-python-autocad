@@ -1,8 +1,3 @@
-"""
-Módulo para carregamento de comandos customizados no AutoCAD.
-
-Inclui função para carregar rotinas LISP personalizadas, facilitando operações como fillet automatizado entre entidades.
-"""
 import os
 from time import sleep
 from src.autocad_conn import get_acad

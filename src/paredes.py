@@ -15,12 +15,6 @@ from time import sleep
 def fazer_parede_esq(lcs: list[float], perfil_U_ext: str, perfil_U_int: str, angulo: float) -> str:
     """Desenha a parede esquerda sem dar fillet com os perfis U.
 
-    Args:
-        lcs: Lista com coordenadas da linha de centro [x1, y1, x2, y2].
-        perfil_U_ext: Handle do perfil U externo.
-        perfil_U_int: Handle do perfil U interno.
-        angulo: Ângulo de rotação da parede em graus.
-
     Returns:
         str: Handle da parede esquerda criada.
     """
@@ -41,12 +35,6 @@ def fazer_parede_esq(lcs: list[float], perfil_U_ext: str, perfil_U_int: str, ang
 
 def fazer_parede_dir(handles_lcs: list[float], perfil_U_ext: str, perfil_U_int: str, angulo: float) -> str:
     """Desenha a parede direita sem dar fillet com os perfis U.
-
-    Args:
-        handles_lcs: Lista com coordenadas da linha de centro [x1, y1, x2, y2].
-        perfil_U_ext: Handle do perfil U externo.
-        perfil_U_int: Handle do perfil U interno.
-        angulo: Ângulo de rotação da parede em graus.
 
     Returns:
         str: Handle da parede direita criada.

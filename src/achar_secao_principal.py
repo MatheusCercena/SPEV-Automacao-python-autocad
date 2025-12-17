@@ -1,12 +1,3 @@
-"""
-Módulo para identificação da seção principal em projetos de linhas de centro.
-
-Realiza cálculos para determinar qual linha de centro será usada como referência principal para o desenho e realocação das seções.
-"""
-"""
-Realiza uma série de calculos sobre a lista de linhas de centro para definir qual delas será a seção principal a ser usada para realocar as seções após estas serem definidas, para desenhar as linhas seguindo um sentido de visualização idealizado.
-"""
-
 from src.calcs_vetor import normalizar, ponto_medio, somar_pontos, multiplicar_vetor
 from sympy import symbols, Eq, solve
 from src.calcs_vetor import dentro_do_intervalo
