@@ -46,7 +46,7 @@ def formula_perfil_U_inf(medidas_perfis_U):
             medidas_finais[0] = medida_U_inf
         elif i == len(medidas_finais)-1:
             medidas_finais[-1] = medida_U_inf
-    return [{'PE-1': [1, medida_U_inf]} for medida_U_inf in medidas_finais]
+    return [{COD_PERFIL_U_INFERIOR: [1, medida_U_inf]} for medida_U_inf in medidas_finais]
 
 def formula_perfil_U_sup(medidas_perfis_U, prumos):
     medidas_finais = [round_decimal(medida) for lado in medidas_perfis_U for medida in lado]
@@ -57,7 +57,7 @@ def formula_perfil_U_sup(medidas_perfis_U, prumos):
             medidas_finais[0] = medida_U_sup + prumos[0]
         elif i == len(medidas_finais)-1:
             medidas_finais[-1] = medida_U_sup + prumos[1]
-    return [{'CEG-235': [1, medida_U_sup]} for medida_U_sup in medidas_finais]
+    return [{COD_PERFIL_U_SUPERIOR: [1, medida_U_sup]} for medida_U_sup in medidas_finais]
 
 def formula_trilho(medidas_perfis_U, prumos):
     medidas_finais = [round_decimal(medida) for lado in medidas_perfis_U for medida in lado]
