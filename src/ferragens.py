@@ -46,11 +46,6 @@ def calcular_adesivos(quant_molas):
     adesivo_cor = quant_molas - 2 if quant_molas >= 3 else 0
     return adesivo_versateel, adesivo_kaizen, adesivo_cor
 
-def calcular_mangueira(giratorios):
-    quantidade = giratorios * 3
-    comprimento = 50
-    return quantidade, comprimento
-
 def calcular_tampas_leito_45(angs_in):
     quantidade = 0
     for ang in angs_in:

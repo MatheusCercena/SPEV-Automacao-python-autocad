@@ -1,8 +1,13 @@
 from src.calcs_vetor import contar_entre_numeros
+from src.codigos_materiais import *
+from decimal import Decimal, ROUND_HALF_UP
+
+def round_decimal(valor):
+    return Decimal(str(valor)).quantize(Decimal('0'), rounding=ROUND_HALF_UP)
 
 def formula_polietileno(medidas_perfis_U):
     comprimento_sacada = int(sum([round(sum(lado), 0) for lado in medidas_perfis_U]))
-    return {'POLIETILENO-UHMW': [2, comprimento_sacada]}
+    return {'POLIETILENO-UHMW': [2, round_decimal(comprimento_sacada)]}
 
 def formula_escovinha_7x8(medidas_perfis_U):
     comprimento_sacada = int(sum([round(sum(lado), 0) for lado in medidas_perfis_U]))
@@ -12,7 +17,7 @@ def formula_escovinha_5x8(quantidade_pe3, comprimento_pe3):
     return {'ESCOVINHA5X8CINZA': [quantidade_pe3, int((comprimento_pe3 - 164))]}
 
 def formula_vep(quantidade_vidros, altura_vidros):
-    return {'VEP': [sum(quantidade_vidros), altura_vidros+40]}
+    return {'VEP': [sum(quantidade_vidros)-1, altura_vidros+40]}
 
 def formula_tubo_aparador(sentidos_abert):
     tubos = []
@@ -25,10 +30,15 @@ def formula_tubo_aparador(sentidos_abert):
     return [{'TUBOAPARADOR': [1, tubo]} for tubo in tubos]
 
 def formula_leito(medidas_leitos):
-    return [{'PE-008': [2, medida_leito]} for medida_leito in medidas_leitos]
+    return [{'PE-008': [2, round_decimal(medida_leito)]} for medida_leito in medidas_leitos]
+
+def calcular_mangueira(giratorios):
+    quantidade = len(giratorios) * 3
+    comprimento = 50
+    return {'MANGUEIRACRISTAL': [quantidade, comprimento]}
 
 def formula_perfil_U_inf(medidas_perfis_U):
-    medidas_finais = [round(medida) for lado in medidas_perfis_U for medida in lado]
+    medidas_finais = [round_decimal(medida) for lado in medidas_perfis_U for medida in lado]
     for i, medida_U_inf in enumerate(medidas_finais):
         if i == 0 and i == len(medidas_finais)-1:
             medidas_finais.append(medida_U_inf)
@@ -39,7 +49,7 @@ def formula_perfil_U_inf(medidas_perfis_U):
     return [{'PE-1': [1, medida_U_inf]} for medida_U_inf in medidas_finais]
 
 def formula_perfil_U_sup(medidas_perfis_U, prumos):
-    medidas_finais = [round(medida) for lado in medidas_perfis_U for medida in lado]
+    medidas_finais = [round_decimal(medida) for lado in medidas_perfis_U for medida in lado]
     for i, medida_U_sup in enumerate(medidas_finais):
         if i == 0 and i == len(medidas_finais)-1:
             medidas_finais[0] = medida_U_sup + prumos[0] + prumos[1]
@@ -50,53 +60,39 @@ def formula_perfil_U_sup(medidas_perfis_U, prumos):
     return [{'CEG-235': [1, medida_U_sup]} for medida_U_sup in medidas_finais]
 
 def formula_trilho(medidas_perfis_U, prumos):
-    medidas_finais = [round(medida) for lado in medidas_perfis_U for medida in lado]
-    # for i, medida_U_inf in enumerate(medidas_finais):
-    #     if i == 0 and i == len(medidas_finais)-1:
-    #         medidas_finais[0] = medida_U_inf + prumos[0] + prumos[1]
-    #     elif i == 0:
-    #         medidas_finais[0] = medida_U_inf + prumos[0]
-    #     elif i == len(medidas_finais)-1:
-    #         medidas_finais[-1] = medida_U_inf + prumos[1]
+    medidas_finais = [round_decimal(medida) for lado in medidas_perfis_U for medida in lado]
 
     lista_trilhos = []
     for i, medida_trilho in enumerate(medidas_finais):
         if i == 0 and i == len(medidas_finais)-1:
-            lista_trilhos.append({'PE-007' : [1, medida_trilho]})
-            lista_trilhos.append({'PE-007' : [1, medida_trilho+prumos[0] + prumos[1]]})
+            lista_trilhos.append({COD_TRILHO : [1, medida_trilho]})
+            lista_trilhos.append({COD_TRILHO : [1, medida_trilho+prumos[0] + prumos[1]]})
         elif i == 0:
-            lista_trilhos.append({'PE-007' : [1, medida_trilho]})
-            lista_trilhos.append({'PE-007' : [1, medida_trilho + prumos[0]]})
+            lista_trilhos.append({COD_TRILHO : [1, medida_trilho]})
+            lista_trilhos.append({COD_TRILHO : [1, medida_trilho + prumos[0]]})
         elif i == len(medidas_finais)-1:
-            lista_trilhos.append({'PE-007' : [1, medida_trilho]})
-            lista_trilhos.append({'PE-007' : [1, medida_trilho + prumos[1]]})
+            lista_trilhos.append({COD_TRILHO : [1, medida_trilho]})
+            lista_trilhos.append({COD_TRILHO : [1, medida_trilho + prumos[1]]})
         else:
-            lista_trilhos.append({'PE-007' : [2, medida_trilho]})
+            lista_trilhos.append({COD_TRILHO : [2, medida_trilho]})
     return lista_trilhos
 
 def formula_capa(medidas_perfis_U, prumos):
-    medidas_finais = [int(medida) for lado in medidas_perfis_U for medida in lado]
-    # for i, medida_U_inf in enumerate(medidas_finais):
-    #     if i == 0 and i == len(medidas_finais)-1:
-    #         medidas_finais.append(medida_U_inf) + prumos[0] + prumos[1]
-    #     elif i == 0:
-    #         medidas_finais[0] = medida_U_inf+prumos[0]
-    #     elif i == len(medidas_finais)-1:
-    #         medidas_finais[-1] = medida_U_inf+prumos[1]
+    medidas_finais = [round_decimal(medida) for lado in medidas_perfis_U for medida in lado]
 
     lista_capas = []
     for i, medida_capa in enumerate(medidas_finais):
         if i == 0 and i == len(medidas_finais)-1:
-            lista_capas.append({'SAC-0005' : [1, medida_capa]})
-            lista_capas.append({'SAC-0005' : [1, medida_capa+prumos[0] + prumos[1]]})
+            lista_capas.append({COD_CAPA : [1, medida_capa]})
+            lista_capas.append({COD_CAPA : [1, medida_capa+prumos[0] + prumos[1]]})
         elif i == 0:
-            lista_capas.append({'SAC-0005' : [1, medida_capa]})
-            lista_capas.append({'SAC-0005' : [1, medida_capa + prumos[0]]})
+            lista_capas.append({COD_CAPA : [1, medida_capa]})
+            lista_capas.append({COD_CAPA : [1, medida_capa + prumos[0]]})
         elif i == len(medidas_finais)-1:
-            lista_capas.append({'SAC-0005' : [1, medida_capa]})
-            lista_capas.append({'SAC-0005' : [1, medida_capa + prumos[1]]})
+            lista_capas.append({COD_CAPA : [1, medida_capa]})
+            lista_capas.append({COD_CAPA : [1, medida_capa + prumos[1]]})
         else:
-            lista_capas.append({'SAC-0005' : [2, medida_capa]})
+            lista_capas.append({COD_CAPA : [2, medida_capa]})
     return lista_capas
 
 def formula_cantoneira_com_escova(giratorios : list[int], quant_vidros : list, altura_vidros : int) -> dict[
@@ -117,15 +113,17 @@ def formula_cantoneira_com_escova(giratorios : list[int], quant_vidros : list, a
     return {'PE-3': [quant_cantoneira, comprimento_cantoneiras]}
 
 
-def calcular_lista_perfis_rolo(dados: dict, prumos: list[int, int]) -> list[dict]:
+def calcular_lista_perfis_rolo(dados: dict, prumos: list[int, int]):
     polietileno = formula_polietileno(dados['medidas_perfis_U'])
     escovinha_7x8 = formula_escovinha_7x8(dados['medidas_perfis_U'])
     veps = formula_vep(dados['quantidade_vidros'], dados['altura_vidros'])
     cantoneiras_com_escova = formula_cantoneira_com_escova(dados['giratorios'], dados['quantidade_vidros'], dados['altura_vidros'])
     escovinha_5x8 = formula_escovinha_5x8(cantoneiras_com_escova['PE-3'][0], cantoneiras_com_escova['PE-3'][1])
+    quantidade_mangueiras = calcular_mangueira(dados['giratorios'])
+
 
     lista_tubo_aparador = formula_tubo_aparador(dados['aberturas'])
-    lista_leitos = formula_leito([int(medida) for medida in dados['medidas_leitos']])
+    lista_leitos = formula_leito(medida for medida in dados['medidas_leitos'])
     lista_perfis_u_inf = formula_perfil_U_inf(dados['medidas_perfis_U'])
     lista_perfis_u_sup = formula_perfil_U_sup(dados['medidas_perfis_U'], prumos)
     lista_trilhos = formula_trilho(dados['medidas_perfis_U'], prumos)
@@ -133,7 +131,7 @@ def calcular_lista_perfis_rolo(dados: dict, prumos: list[int, int]) -> list[dict
     lista_perfis_final = {}
 
     # Perfis únicos (dicionários)
-    for perfil_dict in [polietileno, escovinha_7x8, escovinha_5x8, veps, cantoneiras_com_escova]:
+    for perfil_dict in [polietileno, escovinha_7x8, escovinha_5x8, veps, cantoneiras_com_escova, quantidade_mangueiras]:
         for k, v in perfil_dict.items():
             lista_perfis_final.setdefault(k, v)
 
