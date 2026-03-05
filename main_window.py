@@ -52,7 +52,6 @@ class MainWindow(QMainWindow):
         self.resumo_widget.atualizar_dados(self.dados_sacada)
 
     def ir_para_etapa(self, etapa_idx):
-        """Navega diretamente para uma etapa específica"""
         if etapa_idx == self.etapa_atual:
             return
         if self.vaos_widget.checar_existencia_vaos() is False:

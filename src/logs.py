@@ -24,8 +24,8 @@ def log_spev(mensagem: str, nome_arquivo="spev.log"):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         texto_log = f"[{timestamp}] {mensagem}\n"
 
-        with open(caminho_log, "a", encoding="utf-8") as f:
-            f.write(texto_log)
+        # with open(caminho_log, "a", encoding="utf-8") as f:
+        #     f.write(texto_log)
 
     except Exception as e:
         print(f"[ERRO] Não foi possível gravar no log: {e} {traceback.format_exc()}")

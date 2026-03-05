@@ -54,3 +54,5 @@ htmlcov/
 
 # Arquivos de exportação (opcional - remova se quiser versionar)
 exportacoes/*.json
+
+src/scrapper/config.py
