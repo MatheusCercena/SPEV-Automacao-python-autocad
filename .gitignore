@@ -33,7 +33,6 @@ logs/
 # Arquivos temporários
 *.tmp
 *.temp
-*.bak
 
 # Arquivos de configuração local
 .env
